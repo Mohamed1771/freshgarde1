@@ -60,7 +60,6 @@ class AppDrawer extends StatelessWidget {
           const Divider(),
           _Item(Icons.person_outline, 'الملف التجاري', () => tab(MainTab.profile)),
           _Item(Icons.settings_outlined, 'الإعدادات', () => open(Routes.settings)),
-          _Item(Icons.support_agent_outlined, 'المساعدة والدعم', () => open(Routes.help)),
           const Divider(),
           _Item(Icons.logout, 'تسجيل الخروج', () async {
             final ok = await confirmDialog(context, title: 'تسجيل الخروج', message: 'هل تريد تسجيل الخروج من حسابك؟', confirm: 'خروج');

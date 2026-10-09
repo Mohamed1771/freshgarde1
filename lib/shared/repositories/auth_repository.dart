@@ -98,17 +98,6 @@ class AuthRepository extends ChangeNotifier {
     _resetFor = null;
     _otpVerified = false;
   }
-
-  void updateProfile({required String fullName, required String phone, required String companyName, required String city}) {
-    final t = _current;
-    if (t == null) return;
-    t
-      ..fullName = fullName
-      ..phone = phone
-      ..companyName = companyName
-      ..city = city;
-    notifyListeners();
-  }
 }
 
 class _Account {

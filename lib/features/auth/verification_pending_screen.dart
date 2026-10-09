@@ -65,7 +65,6 @@ class _VerificationPendingScreenState extends State<VerificationPendingScreen> {
         const SizedBox(height: 16),
         LoadingButton(label: 'محاكاة الموافقة والمتابعة', icon: Icons.verified, loading: _loading, onPressed: _approve),
         const SizedBox(height: 10),
-        OutlinedButton(onPressed: () => Navigator.pushNamed(context, Routes.help), child: const Text('التواصل مع الدعم')),
         TextButton(onPressed: _logout, child: const Text('تسجيل الخروج')),
       ]),
     );

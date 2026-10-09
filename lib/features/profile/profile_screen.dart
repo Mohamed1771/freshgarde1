@@ -44,12 +44,6 @@ class ProfileScreen extends StatelessWidget {
                 ),
                 StatusChip(label: trader.role.label, color: AppColors.primary, icon: Icons.swap_horiz),
               ]),
-              const SizedBox(height: 12),
-              OutlinedButton.icon(
-                onPressed: () => Navigator.pushNamed(context, Routes.editProfile),
-                icon: const Icon(Icons.edit_outlined),
-                label: const Text('تعديل الملف'),
-              ),
             ]),
           ),
           const SizedBox(height: 12),
@@ -102,8 +96,6 @@ class ProfileScreen extends StatelessWidget {
               ListTile(leading: const Icon(Icons.settings_outlined), title: const Text('الإعدادات'), trailing: const Icon(Icons.chevron_left), onTap: () => Navigator.pushNamed(context, Routes.settings)),
               const Divider(),
               ListTile(leading: const Icon(Icons.bar_chart_rounded), title: const Text('التقارير'), trailing: const Icon(Icons.chevron_left), onTap: () => Navigator.pushNamed(context, Routes.reports)),
-              const Divider(),
-              ListTile(leading: const Icon(Icons.support_agent_outlined), title: const Text('المساعدة والدعم'), trailing: const Icon(Icons.chevron_left), onTap: () => Navigator.pushNamed(context, Routes.help)),
               const Divider(),
               ListTile(
                 leading: const Icon(Icons.logout, color: AppColors.danger),

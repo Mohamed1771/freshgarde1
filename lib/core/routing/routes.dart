@@ -14,9 +14,7 @@ import '../../features/export/create_shipment_screen.dart';
 import '../../features/marketplace/deal_request_screen.dart';
 import '../../features/marketplace/offer_details_screen.dart';
 import '../../features/notifications/notifications_screen.dart';
-import '../../features/profile/edit_profile_screen.dart';
 import '../../features/reports/reports_screen.dart';
-import '../../features/settings/help_screen.dart';
 import '../../features/settings/settings_screen.dart';
 import '../../features/shipments/shipment_details_screen.dart';
 
@@ -39,9 +37,7 @@ abstract final class Routes {
   static const notifications = '/notifications';
   static const deals = '/deals';
   static const reports = '/reports';
-  static const editProfile = '/profile/edit';
   static const settings = '/settings';
-  static const help = '/help';
 
   static Route<dynamic> onGenerate(RouteSettings s) {
     final arg = s.arguments;
@@ -64,9 +60,7 @@ abstract final class Routes {
       notifications => const NotificationsScreen(),
       deals => const DealsScreen(standalone: true),
       reports => const ReportsScreen(),
-      editProfile => const EditProfileScreen(),
       settings => const SettingsScreen(),
-      help => const HelpScreen(),
       _ => const SplashScreen(),
     };
     return MaterialPageRoute(builder: (_) => page, settings: s);

@@ -15,7 +15,14 @@ class SettingsScreen extends StatefulWidget {
 }
 
 class _SettingsScreenState extends State<SettingsScreen> {
-  late final TextEditingController _url = TextEditingController(text: context.read<SettingsRepository>().apiBaseUrl);
+  late final TextEditingController _url;
+
+  @override
+  void initState() {
+    super.initState();
+    // Created eagerly: a lazy field would first be read in dispose(), where context lookups are unsafe.
+    _url = TextEditingController(text: context.read<SettingsRepository>().apiBaseUrl);
+  }
 
   @override
   void dispose() {
@@ -117,8 +124,6 @@ class _SettingsScreenState extends State<SettingsScreen> {
               ),
             ]),
             section('عام', [
-              const ListTile(contentPadding: EdgeInsets.zero, leading: Icon(Icons.language), title: Text('اللغة'), trailing: Text('العربية')),
-              const ListTile(contentPadding: EdgeInsets.zero, leading: Icon(Icons.thermostat), title: Text('وحدة الحرارة'), trailing: Text('°C')),
               ListTile(
                 contentPadding: EdgeInsets.zero,
                 leading: const Icon(Icons.info_outline),

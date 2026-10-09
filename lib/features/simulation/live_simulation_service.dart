@@ -57,8 +57,7 @@ class LiveSession {
   static const minGapHours = 2.0;
 
   /// Minimum real time between two alerts (so SnackBars do not stack up at high speed).
-  /// Not const so tests running in fake time can lower it.
-  static Duration minGapReal = const Duration(seconds: 6);
+  static const minGapReal = Duration(seconds: 6);
 
   /// The same kind of alert is not repeated within this simulated window (avoids flapping
   /// around a threshold, e.g. humidity hovering at 82%).
