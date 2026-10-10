@@ -3,32 +3,28 @@ import 'package:provider/provider.dart';
 
 import '../../app/shell_controller.dart';
 import '../../core/routing/routes.dart';
-import '../../shared/repositories/deal_repository.dart';
+import '../../core/widgets/brand.dart';
 import '../../shared/repositories/notification_repository.dart';
-import '../deals/deals_screen.dart';
 import '../marketplace/marketplace_screen.dart';
 import '../profile/profile_screen.dart';
 import '../shipments/my_shipments_screen.dart';
-import 'app_drawer.dart';
 import 'home_screen.dart';
 
-/// Main pages via bottom navigation; secondary pages via the drawer.
+/// Main pages via bottom navigation (no side menu).
 class MainShell extends StatelessWidget {
   const MainShell({super.key});
 
   static const _titles = {
     MainTab.home: 'الرئيسية',
-    MainTab.marketplace: 'سوق الاستيراد',
+    MainTab.marketplace: 'السوق',
     MainTab.shipments: 'شحناتي',
-    MainTab.deals: 'الصفقات والطلبات',
-    MainTab.profile: 'الملف التجاري',
+    MainTab.profile: 'حسابي',
   };
 
   @override
   Widget build(BuildContext context) {
     final shell = context.watch<ShellController>();
     final unread = context.watch<NotificationRepository>().unreadCount;
-    final pendingDeals = context.watch<DealRepository>().pendingIncoming;
 
     return PopScope(
       canPop: shell.tab == MainTab.home,
@@ -36,9 +32,12 @@ class MainShell extends StatelessWidget {
         if (!didPop) shell.go(MainTab.home);
       },
       child: Scaffold(
-        drawer: const AppDrawer(),
         appBar: AppBar(
-          title: Text(_titles[shell.tab]!),
+          title: Row(children: [
+            const BrandLogo(size: 32),
+            const SizedBox(width: 10),
+            Text(_titles[shell.tab]!),
+          ]),
           actions: [
             IconButton(
               tooltip: 'الإشعارات',
@@ -57,21 +56,16 @@ class MainShell extends StatelessWidget {
             : null,
         body: IndexedStack(
           index: shell.tab.index,
-          children: const [HomeScreen(), MarketplaceScreen(), MyShipmentsScreen(), DealsScreen(), ProfileScreen()],
+          children: const [HomeScreen(), MarketplaceScreen(), MyShipmentsScreen(), ProfileScreen()],
         ),
         bottomNavigationBar: NavigationBar(
           selectedIndex: shell.tab.index,
           onDestinationSelected: (i) => shell.go(MainTab.values[i]),
-          destinations: [
-            const NavigationDestination(icon: Icon(Icons.home_outlined), selectedIcon: Icon(Icons.home), label: 'الرئيسية'),
-            const NavigationDestination(icon: Icon(Icons.storefront_outlined), selectedIcon: Icon(Icons.storefront), label: 'السوق'),
-            const NavigationDestination(icon: Icon(Icons.local_shipping_outlined), selectedIcon: Icon(Icons.local_shipping), label: 'شحناتي'),
-            NavigationDestination(
-              icon: Badge(isLabelVisible: pendingDeals > 0, label: Text('$pendingDeals'), child: const Icon(Icons.handshake_outlined)),
-              selectedIcon: const Icon(Icons.handshake),
-              label: 'الصفقات',
-            ),
-            const NavigationDestination(icon: Icon(Icons.person_outline), selectedIcon: Icon(Icons.person), label: 'حسابي'),
+          destinations: const [
+            NavigationDestination(icon: Icon(Icons.home_outlined), selectedIcon: Icon(Icons.home), label: 'الرئيسية'),
+            NavigationDestination(icon: Icon(Icons.storefront_outlined), selectedIcon: Icon(Icons.storefront), label: 'السوق'),
+            NavigationDestination(icon: Icon(Icons.local_shipping_outlined), selectedIcon: Icon(Icons.local_shipping), label: 'شحناتي'),
+            NavigationDestination(icon: Icon(Icons.person_outline), selectedIcon: Icon(Icons.person), label: 'حسابي'),
           ],
         ),
       ),

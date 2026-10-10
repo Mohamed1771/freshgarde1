@@ -27,6 +27,6 @@ void main() {
 
     expect(find.text('استيراد'), findsOneWidget);
     expect(find.text('تصدير'), findsOneWidget);
-    expect(find.text('العروض التجارية المتاحة'), findsOneWidget);
+    expect(find.text('العروض المتاحة'), findsOneWidget);
   });
 }

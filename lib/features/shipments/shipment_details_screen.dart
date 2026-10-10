@@ -3,7 +3,6 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import '../../core/routing/routes.dart';
 import '../../core/theme/app_colors.dart';
 import '../../core/utils/formatters.dart';
 import '../../core/widgets/common.dart';
@@ -117,16 +116,6 @@ class _ShipmentDetailsScreenState extends State<ShipmentDetailsScreen> {
         title: Text('الشحنة ${s.id}'),
         actions: [_StatusMenu(shipment: s)],
       ),
-      bottomNavigationBar: SafeArea(
-        child: Padding(
-          padding: const EdgeInsets.fromLTRB(16, 8, 16, 12),
-          child: FilledButton.icon(
-            onPressed: () => Navigator.pushNamed(context, Routes.aiInspection, arguments: s.id),
-            icon: const Icon(Icons.document_scanner_outlined),
-            label: const Text('فحص المنتج بالذكاء الاصطناعي'),
-          ),
-        ),
-      ),
       body: StreamBuilder<SimulationState>(
         stream: session.bridge.onSimulationStateChanged,
         initialData: session.state,
@@ -156,8 +145,6 @@ class _ShipmentDetailsScreenState extends State<ShipmentDetailsScreen> {
               RecommendationsPanel(recommendations: st.recommendations),
               const SizedBox(height: 12),
               DecisionFeed(decisions: st.decisions),
-              const SizedBox(height: 12),
-              _InspectionCard(shipment: s),
               const SizedBox(height: 12),
               _InfoCard(shipment: s),
               const SizedBox(height: 12),
@@ -286,47 +273,6 @@ class _AlertsList extends StatelessWidget {
               ),
             ]),
           ),
-      ]),
-    );
-  }
-}
-
-class _InspectionCard extends StatelessWidget {
-  const _InspectionCard({required this.shipment});
-  final Shipment shipment;
-
-  @override
-  Widget build(BuildContext context) {
-    final t = Theme.of(context).textTheme;
-    final ins = shipment.inspection;
-    return AppCard(
-      child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-        Row(children: [
-          const Icon(Icons.document_scanner_outlined, color: AppColors.primary),
-          const SizedBox(width: 8),
-          Expanded(child: Text('فحص الذكاء الاصطناعي', style: t.titleSmall)),
-          if (ins == null)
-            const StatusChip(label: 'لم يُفحص بعد', color: AppColors.textSecondary, dense: true)
-          else if (ins.isSimulated)
-            const MockBadge(label: 'نتيجة محاكاة')
-          else
-            const StatusChip(label: 'نموذج AI', color: AppColors.success, dense: true),
-        ]),
-        const SizedBox(height: 8),
-        if (ins == null)
-          Text('افحص صورة أو فيديو للمنتج لتحديد مرحلة النضج؛ ستبدأ المحاكاة من النتيجة.', style: t.bodyMedium)
-        else ...[
-          Row(children: [
-            Container(width: 14, height: 14, decoration: BoxDecoration(color: ins.maturityStage.color, shape: BoxShape.circle)),
-            const SizedBox(width: 8),
-            Text(ins.maturityStage.label, style: t.titleSmall),
-            const Spacer(),
-            Text('ثقة ${Fmt.pct(ins.confidence * 100)}', style: t.bodyMedium),
-          ]),
-          InfoRow(label: 'درجة الجودة', value: Fmt.pct(ins.qualityScore)),
-          InfoRow(label: 'العيوب', value: ins.defects.isEmpty ? 'لا توجد' : ins.defects.map((d) => d.label).join('، ')),
-          InfoRow(label: 'الملف', value: '${ins.fileName} • ${Fmt.ago(ins.createdAt)}'),
-        ],
       ]),
     );
   }

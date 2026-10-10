@@ -1,6 +1,5 @@
 import 'dart:async';
 
-import '../../shared/models/inspection_result.dart';
 import '../../shared/models/shipment.dart';
 import '../../shared/models/simulation_state.dart';
 import '../../shared/repositories/settings_repository.dart';
@@ -32,9 +31,6 @@ class LiveSimulationService {
     _repo.setStatus(s, status);
     _sessions[s.id]?.syncWithStatus();
   }
-
-  /// Re-seeds the produce of a running simulation from a new inspection.
-  void applyInspection(Shipment s, InspectionResult r) => _sessions[s.id]?.bridge.setProductFromAI(r);
 
   void dispose() {
     for (final s in _sessions.values) {

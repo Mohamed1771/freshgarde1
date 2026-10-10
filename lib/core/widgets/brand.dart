@@ -2,29 +2,29 @@ import 'package:flutter/material.dart';
 
 import '../theme/app_colors.dart';
 
+/// The FreshRoute logo (`assets/images/logo.webp`, white background).
+/// [light] puts it on a white rounded tile for use over coloured surfaces.
 class BrandLogo extends StatelessWidget {
   const BrandLogo({super.key, this.size = 72, this.light = false});
   final double size;
   final bool light;
 
+  static const asset = 'assets/images/logo.webp';
+
   @override
-  Widget build(BuildContext context) => Container(
-        width: size,
-        height: size,
-        decoration: BoxDecoration(
-          gradient: const LinearGradient(colors: [AppColors.primary, AppColors.sky], begin: Alignment.topRight, end: Alignment.bottomLeft),
-          borderRadius: BorderRadius.circular(size * 0.28),
-          border: light ? Border.all(color: AppColors.white.withValues(alpha: 0.5), width: 2) : null,
-        ),
-        child: Stack(alignment: Alignment.center, children: [
-          Icon(Icons.local_shipping_rounded, color: AppColors.white, size: size * 0.52),
-          PositionedDirectional(
-            top: size * 0.12,
-            end: size * 0.12,
-            child: Icon(Icons.ac_unit, color: AppColors.white, size: size * 0.24),
-          ),
-        ]),
-      );
+  Widget build(BuildContext context) {
+    final image = Image.asset(asset, width: size, height: size, fit: BoxFit.contain, filterQuality: FilterQuality.medium);
+    if (!light) return image;
+    return Container(
+      padding: EdgeInsets.all(size * 0.12),
+      decoration: BoxDecoration(
+        color: AppColors.white,
+        borderRadius: BorderRadius.circular(size * 0.28),
+        boxShadow: [BoxShadow(color: AppColors.navy.withValues(alpha: 0.18), blurRadius: 24, offset: const Offset(0, 8))],
+      ),
+      child: image,
+    );
+  }
 }
 
 class BrandTitle extends StatelessWidget {

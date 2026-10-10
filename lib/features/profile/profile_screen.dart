@@ -95,8 +95,6 @@ class ProfileScreen extends StatelessWidget {
             child: Column(children: [
               ListTile(leading: const Icon(Icons.settings_outlined), title: const Text('الإعدادات'), trailing: const Icon(Icons.chevron_left), onTap: () => Navigator.pushNamed(context, Routes.settings)),
               const Divider(),
-              ListTile(leading: const Icon(Icons.bar_chart_rounded), title: const Text('التقارير'), trailing: const Icon(Icons.chevron_left), onTap: () => Navigator.pushNamed(context, Routes.reports)),
-              const Divider(),
               ListTile(
                 leading: const Icon(Icons.logout, color: AppColors.danger),
                 title: const Text('تسجيل الخروج', style: TextStyle(color: AppColors.danger)),

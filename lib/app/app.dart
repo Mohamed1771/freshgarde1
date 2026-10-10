@@ -5,7 +5,6 @@ import 'package:provider/provider.dart';
 import '../core/routing/routes.dart';
 import '../core/theme/app_theme.dart';
 import '../shared/repositories/auth_repository.dart';
-import '../shared/repositories/deal_repository.dart';
 import '../shared/repositories/notification_repository.dart';
 import '../shared/repositories/offer_repository.dart';
 import '../shared/repositories/settings_repository.dart';
@@ -24,7 +23,6 @@ class FreshRouteApp extends StatelessWidget {
         ChangeNotifierProvider(create: (_) => AuthRepository()),
         ChangeNotifierProvider(create: (_) => OfferRepository()),
         ChangeNotifierProvider(create: (c) => ShipmentRepository(c.read<NotificationRepository>())),
-        ChangeNotifierProvider(create: (c) => DealRepository(c.read<NotificationRepository>())),
         ChangeNotifierProvider(create: (_) => SettingsRepository()),
         Provider(
           create: (c) => LiveSimulationService(c.read<ShipmentRepository>(), c.read<SettingsRepository>()),

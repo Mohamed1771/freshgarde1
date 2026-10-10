@@ -70,12 +70,14 @@ void main() {
     await tapText(t, 'تعبئة البيانات التجريبية');
     await tapText(t, 'دخول');
     await settle(t);
-    expect(find.text('العروض التجارية المتاحة'), findsOneWidget);
+    expect(find.text('العروض المتاحة'), findsOneWidget);
 
-    // Browse import offers.
+    // Marketplace: three photo offers, two export and one import.
     await tapText(t, 'استيراد');
-    expect(find.text('سوق الاستيراد'), findsOneWidget);
-    expect(find.textContaining('عرض'), findsWidgets);
+    expect(find.text('عروض التصدير'), findsOneWidget);
+    expect(find.text('عروض الاستيراد'), findsOneWidget);
+    expect(find.text('عرض تصدير'), findsNWidgets(2));
+    expect(find.text('عرض استيراد'), findsOneWidget);
 
     // Create export shipment (5 steps).
     await tapText(t, 'الرئيسية', last: true);
@@ -124,26 +126,10 @@ void main() {
     expect(created.variety, 'بندورة شيري');
     expect(find.text(created.id), findsOneWidget);
 
-    // Shipment details (live view, pending) → AI inspection.
+    // Shipment details (live simulation view, pending).
     await tapText(t, created.id);
     expect(find.text('الشحنة ${created.id}'), findsOneWidget);
     expect(find.text('الشحنة بانتظار الانطلاق'), findsOneWidget);
-    await tapText(t, 'فحص المنتج بالذكاء الاصطناعي');
-    await tapText(t, 'صورة تجريبية');
-    await settle(t, 300);
-    expect(find.text('sample_tomatoes.png'), findsOneWidget);
-    await tapText(t, 'بدء التحليل');
-    await settle(t, 2500);
-    expect(find.text('نتيجة محاكاة — ليست AI حقيقي'), findsOneWidget);
-    await tapText(t, 'تطبيق النتيجة على ${created.id}');
-    expect(created.inspection, isNotNull);
-    final stage = created.inspection!.maturityStage;
-
-    // Back to the live view: the simulation starts from the inspected stage.
-    await tapText(t, 'المتابعة المباشرة للشحنة');
-    expect(find.text('الشحنة ${created.id}'), findsOneWidget);
-    expect(find.textContaining('بدأت من "${stage.label}"'), findsOneWidget);
-    expect(find.text(created.scenario.label), findsWidgets);
     final tempBefore = created.reading.temperatureC;
 
     // No simulation controls: the trip runs on its own once the truck departs.

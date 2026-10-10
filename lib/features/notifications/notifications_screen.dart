@@ -115,15 +115,6 @@ class _NotificationTile extends StatelessWidget {
                 icon: const Icon(Icons.local_shipping_outlined),
                 label: Text('عرض الشحنة ${n.shipmentId}'),
               )
-            else if (n.type == NotificationType.deal)
-              FilledButton.icon(
-                onPressed: () {
-                  Navigator.pop(c);
-                  Navigator.pushNamed(context, Routes.deals);
-                },
-                icon: const Icon(Icons.handshake_outlined),
-                label: const Text('عرض الصفقات'),
-              )
             else
               OutlinedButton(onPressed: () => Navigator.pop(c), child: const Text('إغلاق')),
           ]),

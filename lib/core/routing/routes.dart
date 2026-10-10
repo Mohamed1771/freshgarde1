@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 
-import '../../features/ai_inspection/ai_inspection_screen.dart';
 import '../../features/auth/forgot_password_screen.dart';
 import '../../features/auth/login_screen.dart';
 import '../../features/auth/otp_screen.dart';
@@ -9,12 +8,9 @@ import '../../features/auth/reset_password_screen.dart';
 import '../../features/auth/splash_screen.dart';
 import '../../features/auth/verification_pending_screen.dart';
 import '../../features/dashboard/main_shell.dart';
-import '../../features/deals/deals_screen.dart';
 import '../../features/export/create_shipment_screen.dart';
-import '../../features/marketplace/deal_request_screen.dart';
 import '../../features/marketplace/offer_details_screen.dart';
 import '../../features/notifications/notifications_screen.dart';
-import '../../features/reports/reports_screen.dart';
 import '../../features/settings/settings_screen.dart';
 import '../../features/shipments/shipment_details_screen.dart';
 
@@ -29,14 +25,10 @@ abstract final class Routes {
   static const verificationPending = '/verification-pending';
   static const home = '/home';
   static const offerDetails = '/offer';
-  static const dealRequest = '/deal-request';
   static const createShipment = '/export/create';
   static const shipmentDetails = '/shipment';
-  static const aiInspection = '/ai-inspection';
   static const simulation = '/simulation';
   static const notifications = '/notifications';
-  static const deals = '/deals';
-  static const reports = '/reports';
   static const settings = '/settings';
 
   static Route<dynamic> onGenerate(RouteSettings s) {
@@ -51,15 +43,11 @@ abstract final class Routes {
       verificationPending => const VerificationPendingScreen(),
       home => const MainShell(),
       offerDetails => OfferDetailsScreen(offerId: arg as String),
-      dealRequest => DealRequestScreen(offerId: arg as String),
       createShipment => const CreateShipmentScreen(),
       shipmentDetails => ShipmentDetailsScreen(shipmentId: arg as String?),
-      aiInspection => AiInspectionScreen(shipmentId: arg as String?),
       // The simulation is part of the live shipment view.
       simulation => ShipmentDetailsScreen(shipmentId: arg as String?),
       notifications => const NotificationsScreen(),
-      deals => const DealsScreen(standalone: true),
-      reports => const ReportsScreen(),
       settings => const SettingsScreen(),
       _ => const SplashScreen(),
     };

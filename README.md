@@ -30,12 +30,23 @@ flutter analyze && flutter test
 The login screen has a "تعبئة البيانات التجريبية" button. A newly registered trader lands on
 "verification pending"; the button there simulates the admin approval.
 
+## App scope (MVP)
+
+* **Home** — import / export / my shipments shortcuts, critical-alert banner, and the marketplace offers.
+* **Marketplace (السوق)** — three offers with photos: tomatoes and cucumbers (export), potatoes (import).
+* **Export** — 5-step shipment wizard; the new shipment appears in My Shipments → Pending.
+* **My Shipments** — Active / Pending / Delivered / Archived; opening one shows the live 3D simulation.
+* **Account** — profile, settings (notifications, alert threshold, simulation speed), logout.
+
+Deals, reports, the side menu and the AI inspection screen were removed for the MVP. The inspection
+service layer (`AiInspectionService`, `FastApiInspectionService`) is kept in `lib/shared/services/` for
+connecting the Python model later.
+
 ## Demo journey (covered by `test/acceptance_journey_test.dart`)
 
-Login → Home → **استيراد** (marketplace, search/filters) → **تصدير** (5-step wizard) → My Shipments (Pending tab)
-→ open the shipment (live view) → **فحص المنتج بالذكاء الاصطناعي** → "صورة تجريبية" → "بدء التحليل" → apply
-→ **المتابعة المباشرة للشحنة** → **انطلاق الشاحنة** → the trip runs on its own: readings, charts, produce,
-forecast, AI decisions and alerts update as the scenario's events happen → arrival marks the shipment delivered.
+Login → Home → **استيراد** (marketplace: 2 export + 1 import offers) → **تصدير** (5-step wizard)
+→ My Shipments (Pending) → open the shipment (live view) → **انطلاق الشاحنة** → the trip runs on its own:
+readings, charts, produce, forecast, decisions and alerts update as the scenario's events happen.
 
 ## Live simulation and scenarios
 
@@ -93,16 +104,10 @@ Packages: provider, google_fonts (Cairo / IBM Plex Sans Arabic, pinned to v8 bec
 
 ## Connecting your Python AI model
 
-1. Serve `POST /predict/image` and `POST /predict/video` (multipart field `file`, optional `product_hint`)
-   returning the JSON documented on `InspectionResult` (`lib/shared/models/inspection_result.dart`).
-   `tools/fastapi_server_example.py` is a ready-to-edit reference server.
-2. In the app: **الإعدادات → محرّك فحص الذكاء الاصطناعي → FastAPI**, and set the URL
-   (`http://10.0.2.2:8000` from the Android emulator, `http://localhost:8000` from Chrome — enable CORS).
-3. The client is `FastApiInspectionService` (`lib/shared/services/fastapi_inspection_service.dart`).
-   Screens only depend on the `AiInspectionService` interface.
-
-`maturity_stage` values: `mature_green, breaker, turning, ripe, overripe, spoiled` (they map 1:1 to the six
-stages of the Three.js scene).
+The inspection screen is not part of the MVP. To bring it back, call `AiInspectionService` (mock or
+`FastApiInspectionService`) and apply the result with `ShipmentRepository.applyInspection` and
+`SimulationBridge.setProductFromAI`. The FastAPI contract (`POST /predict/image`, `POST /predict/video`)
+is documented on `InspectionResult`; `tools/fastapi_server_example.py` is a reference server.
 
 ## Connecting the Three.js simulation
 

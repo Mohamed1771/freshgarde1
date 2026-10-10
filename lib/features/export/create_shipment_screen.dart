@@ -140,7 +140,7 @@ class _CreateShipmentScreenState extends State<CreateShipmentScreen> {
       smartCooling: _smartCooling,
       reading: SensorReading(time: DateTime.now(), temperatureC: _setpoint, humidityPct: p.optimalHumidity, setpointC: _setpoint),
       qualityPct: 95,
-      forecast: QualityForecast(arrivalQualityPct: 90, shelfLifeDays: 8, arrivalStage: MaturityStage.turning, basis: 'تقدير أولي — بانتظار الفحص'),
+      forecast: QualityForecast(arrivalQualityPct: 90, shelfLifeDays: 8, arrivalStage: MaturityStage.turning, basis: 'تقدير أولي'),
     );
     await repo.create(shipment);
     if (!mounted) return;
@@ -152,7 +152,7 @@ class _CreateShipmentScreenState extends State<CreateShipmentScreen> {
       builder: (c) => AlertDialog(
         icon: const Icon(Icons.check_circle, color: AppColors.success, size: 52),
         title: Text('تم إنشاء الشحنة ${shipment.id}'),
-        content: const Text('أُضيفت الشحنة إلى "شحناتي" ضمن تبويب قيد الانتظار. يمكنك الآن فحص المنتج بالذكاء الاصطناعي قبل الانطلاق.'),
+        content: const Text('أُضيفت الشحنة إلى "شحناتي" ضمن تبويب قيد الانتظار، وتبدأ المتابعة المباشرة عند انطلاق الشاحنة.'),
         actions: [
           TextButton(onPressed: () => Navigator.pop(c, 'list'), child: const Text('عرض في شحناتي')),
           FilledButton(onPressed: () => Navigator.pop(c, 'details'), child: const Text('تفاصيل الشحنة')),
@@ -299,8 +299,6 @@ class _CreateShipmentScreenState extends State<CreateShipmentScreen> {
               },
             ),
           ]),
-          const SizedBox(height: 8),
-          Text('يمكنك تشغيل فحص AI الكامل للصور من صفحة الشحنة بعد إنشائها.', style: Theme.of(context).textTheme.bodySmall),
         ]),
       );
 

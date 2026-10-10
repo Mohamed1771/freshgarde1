@@ -23,7 +23,6 @@ abstract final class MockData {
   static const countries = ['الإمارات', 'السعودية', 'قطر', 'الكويت', 'عُمان', 'البحرين', 'العراق', 'الأردن'];
   static const packagingTypes = ['صناديق بلاستيك 10 كغ', 'كراتين 5 كغ', 'صناديق خشب 15 كغ', 'أكياس شبكية 25 كغ'];
   static const truckTypes = ['براد 40 قدم (Reefer)', 'براد 20 قدم', 'شاحنة مبرّدة متوسطة 12 طن'];
-  static const paymentTerms = ['دفع مسبق 100%', '30% مقدمًا و70% عند التسليم', 'اعتماد مستندي (L/C)', 'دفع عند التسليم'];
 
   static Trader demoTrader() => Trader(
         id: 'TR-1001',
@@ -46,52 +45,48 @@ abstract final class MockData {
         ],
       );
 
-  static List<TradingOffer> offers() {
-    final now = DateTime.now();
-    TradingOffer o(String id, Product p, String variety, double qty, double min, double price, String from, String to,
-            String seller, bool verified, double rating, Availability a, int inDays, String grade, String desc) =>
+  /// The three marketplace offers (two export, one import), with real product photos.
+  static List<TradingOffer> offers() => const [
         TradingOffer(
-          id: id,
-          product: p,
-          variety: variety,
-          quantityTons: qty,
-          minOrderTons: min,
-          pricePerTonJod: price,
-          origin: from,
-          destination: to,
-          sellerName: seller,
-          sellerVerified: verified,
-          sellerRating: rating,
-          availability: a,
-          availableFrom: now.add(Duration(days: inDays)),
-          grade: grade,
-          description: desc,
-          publishedAt: now.subtract(Duration(hours: inDays * 7 + 3)),
-        );
-
-    return [
-      o('OF-201', Products.tomato, 'بندورة شيري', 24, 4, 520, 'الأغوار الشمالية', 'دبي', 'مزارع الغور الذهبي', true, 4.8, Availability.available, 1, 'درجة أولى',
-          'بندورة شيري مقطوفة حديثًا في مرحلة بداية التلوّن، مناسبة للنقل المبرّد حتى 72 ساعة.'),
-      o('OF-202', Products.cucumber, 'خيار بلدي', 18, 3, 310, 'الأغوار الوسطى', 'الرياض', 'تعاونية دير علا', true, 4.6, Availability.available, 2, 'درجة أولى',
-          'خيار بلدي متوسط الحجم، معبأ في صناديق بلاستيكية مهوّاة.'),
-      o('OF-203', Products.pepper, 'فلفل ملوّن', 10, 2, 780, 'المفرق', 'الدوحة', 'البيوت المحمية الحديثة', true, 4.9, Availability.limited, 3, 'ممتاز',
-          'فلفل حلو بثلاثة ألوان من بيوت محمية، فرز آلي حسب الحجم واللون.'),
-      o('OF-204', Products.potato, 'بطاطا سبونتا', 60, 10, 240, 'المفرق', 'بغداد', 'مزارع الصحراء الخضراء', false, 4.2, Availability.available, 0, 'درجة أولى',
-          'بطاطا سبونتا للتصدير، مناسبة للتخزين الطويل.'),
-      o('OF-205', Products.dates, 'تمر مجهول ملكي', 8, 1, 4200, 'الأغوار الوسطى', 'الكويت', 'نخيل وادي الأردن', true, 5.0, Availability.preOrder, 10, 'ملكي',
-          'تمر مجهول حجم كبير جدًا، تعبئة كرتونية 5 كغ.'),
-      o('OF-206', Products.eggplant, 'باذنجان أسود', 15, 3, 290, 'الأغوار الشمالية', 'جدة', 'مزارع الشونة', true, 4.4, Availability.available, 1, 'درجة أولى',
-          'باذنجان لامع متجانس الحجم.'),
-      o('OF-207', Products.strawberry, 'فراولة فستيفال', 4, 0.5, 1650, 'إربد', 'دبي', 'مزارع الشمال', true, 4.7, Availability.limited, 2, 'ممتاز',
-          'فراولة حسّاسة تتطلب تبريدًا قريبًا من 2°C ونقلًا سريعًا.'),
-      o('OF-208', Products.lemon, 'ليمون أضاليا', 30, 5, 450, 'الأغوار الوسطى', 'مسقط', 'تعاونية الكرامة', false, 4.1, Availability.available, 4, 'درجة ثانية',
-          'ليمون عالي العصارة، مناسب للأسواق والمطاعم.'),
-      o('OF-209', Products.zucchini, 'كوسا بلدي', 12, 2, 360, 'الأغوار الشمالية', 'المنامة', 'مزارع الغور الذهبي', true, 4.8, Availability.available, 1, 'درجة أولى',
-          'كوسا بلدي صغير الحجم مطلوب في أسواق الخليج.'),
-      o('OF-210', Products.watermelon, 'بطيخ أحمر', 40, 8, 180, 'الكرك', 'الرياض', 'مزارع الجنوب', true, 4.3, Availability.preOrder, 7, 'درجة أولى',
-          'بطيخ موسم مبكر بوزن 6–9 كغ للحبة.'),
-    ];
-  }
+          id: 'OF-201',
+          type: OfferType.export,
+          product: Products.tomato,
+          variety: 'بندورة بلدية',
+          imageAsset: 'assets/images/offer_tomato.png',
+          quantityTons: 24,
+          pricePerTonJod: 520,
+          origin: 'الأغوار الشمالية',
+          destination: 'دبي',
+          partner: 'شركة وادي الأردن للتصدير الزراعي',
+          description: 'بندورة مقطوفة حديثًا ومفروزة في صناديق 10 كغ، جاهزة للنقل المبرّد عند 12°C.',
+        ),
+        TradingOffer(
+          id: 'OF-202',
+          type: OfferType.export,
+          product: Products.cucumber,
+          variety: 'خيار بلدي',
+          imageAsset: 'assets/images/offer_cucumber.png',
+          quantityTons: 18,
+          pricePerTonJod: 310,
+          origin: 'الأغوار الوسطى',
+          destination: 'الرياض',
+          partner: 'شركة وادي الأردن للتصدير الزراعي',
+          description: 'خيار متوسط الحجم مغلّف بأكياس حفظ الرطوبة داخل صناديق مهوّاة.',
+        ),
+        TradingOffer(
+          id: 'OF-203',
+          type: OfferType.import,
+          product: Products.potato,
+          variety: 'بطاطا سبونتا',
+          imageAsset: 'assets/images/offer_potato.png',
+          quantityTons: 40,
+          pricePerTonJod: 240,
+          origin: 'مصر — الإسكندرية',
+          destination: 'عمّان',
+          partner: 'مؤسسة الدلتا للتصدير',
+          description: 'بطاطا للاستيراد بأحجام متجانسة، مناسبة للتخزين الطويل عند 7°C.',
+        ),
+      ];
 
   static SensorReading _reading(double t, double h, double sp, {int minutesAgo = 5}) => SensorReading(
         time: DateTime.now().subtract(Duration(minutes: minutesAgo)),
@@ -290,12 +285,6 @@ abstract final class MockData {
         title: 'تنبيه حرارة — FR-24021',
         body: 'حرارة حمولة الخيار أعلى من نقطة الضبط بـ 3.8°C. يُنصح بفحص وحدة التبريد والتواصل مع السائق. (بيانات تجريبية)',
         time: now.subtract(const Duration(minutes: 40)),
-      ),
-      AppNotification(
-        id: 'N-2', type: NotificationType.deal,
-        title: 'طلب صفقة جديد',
-        body: 'أرسلت "مؤسسة الإمارات للأغذية الطازجة" طلب شراء 6 طن من البندورة الشيري.',
-        time: now.subtract(const Duration(hours: 3)),
       ),
       AppNotification(
         id: 'N-3', type: NotificationType.shipment, shipmentId: 'FR-24017',

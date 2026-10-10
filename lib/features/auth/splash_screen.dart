@@ -21,21 +21,29 @@ class _SplashScreenState extends State<SplashScreen> {
   }
 
   @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    precacheImage(const AssetImage(BrandLogo.asset), context);
+  }
+
+  @override
   Widget build(BuildContext context) => Scaffold(
-        backgroundColor: AppColors.navy,
-        body: Center(
-          child: TweenAnimationBuilder<double>(
-            tween: Tween(begin: 0.85, end: 1),
-            duration: const Duration(milliseconds: 900),
-            curve: Curves.easeOutBack,
-            builder: (_, s, child) => Transform.scale(scale: s, child: child),
-            child: const Column(mainAxisSize: MainAxisSize.min, children: [
-              BrandLogo(size: 96, light: true),
-              SizedBox(height: 20),
-              BrandTitle(light: true),
-              SizedBox(height: 32),
-              SizedBox(width: 28, height: 28, child: CircularProgressIndicator(strokeWidth: 2.5, color: AppColors.sky)),
-            ]),
+        body: DecoratedBox(
+          decoration: const BoxDecoration(gradient: AppColors.brandGradient),
+          child: Center(
+            child: TweenAnimationBuilder<double>(
+              tween: Tween(begin: 0.85, end: 1),
+              duration: const Duration(milliseconds: 900),
+              curve: Curves.easeOutBack,
+              builder: (_, s, child) => Transform.scale(scale: s, child: child),
+              child: const Column(mainAxisSize: MainAxisSize.min, children: [
+                BrandLogo(size: 104, light: true),
+                SizedBox(height: 22),
+                BrandTitle(light: true),
+                SizedBox(height: 32),
+                SizedBox(width: 28, height: 28, child: CircularProgressIndicator(strokeWidth: 2.5, color: AppColors.white)),
+              ]),
+            ),
           ),
         ),
       );
