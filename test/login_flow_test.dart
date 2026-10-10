@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:freshroute_platform/app/app.dart';
-import 'package:freshroute_platform/shared/repositories/mock_data.dart';
+import 'package:freshgarde/app/app.dart';
+import 'package:freshgarde/shared/repositories/mock_data.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 void main() {
@@ -9,7 +9,7 @@ void main() {
 
   testWidgets('splash → login with demo credentials → home dashboard', (tester) async {
     await tester.binding.setSurfaceSize(const Size(420, 900));
-    await tester.pumpWidget(const FreshRouteApp());
+    await tester.pumpWidget(const FreshGardeApp());
     await tester.pump(const Duration(milliseconds: 1700));
     await tester.pumpAndSettle();
 

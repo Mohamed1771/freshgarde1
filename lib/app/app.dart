@@ -12,8 +12,8 @@ import '../features/simulation/live_simulation_service.dart';
 import '../shared/repositories/shipment_repository.dart';
 import 'shell_controller.dart';
 
-class FreshRouteApp extends StatelessWidget {
-  const FreshRouteApp({super.key});
+class FreshGardeApp extends StatelessWidget {
+  const FreshGardeApp({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -31,7 +31,7 @@ class FreshRouteApp extends StatelessWidget {
         ChangeNotifierProvider(create: (_) => ShellController()),
       ],
       child: MaterialApp(
-        title: 'FreshRoute AI',
+        title: 'FreshGarde',
         debugShowCheckedModeBanner: false,
         theme: AppTheme.light(),
         locale: const Locale('ar', 'JO'),

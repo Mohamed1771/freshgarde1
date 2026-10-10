@@ -160,7 +160,7 @@ class MockSimulationBridge implements SimulationBridge {
   Future<void> _applyPredictionToScene() async {
     final r = _inspection;
     if (r == null) return;
-    final source = jsonEncode(r.isSimulated ? 'FreshRoute mock inspection (simulated)' : 'FreshRoute AI (${r.modelVersion})');
+    final source = jsonEncode(r.isSimulated ? 'FreshGarde mock inspection (simulated)' : 'FreshGarde (${r.modelVersion})');
     await _js('FreshRouteAPI.applyPrediction(0,{stage:${r.maturityStage.simStage},confidence:${r.confidence},source:$source})');
   }
 

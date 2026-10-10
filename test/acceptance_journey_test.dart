@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:freshroute_platform/app/app.dart';
-import 'package:freshroute_platform/shared/models/shipment.dart';
-import 'package:freshroute_platform/shared/repositories/shipment_repository.dart';
-import 'package:freshroute_platform/shared/repositories/mock_data.dart';
+import 'package:freshgarde/app/app.dart';
+import 'package:freshgarde/shared/models/shipment.dart';
+import 'package:freshgarde/shared/repositories/shipment_repository.dart';
+import 'package:freshgarde/shared/repositories/mock_data.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 
@@ -64,7 +64,7 @@ void main() {
     await t.binding.setSurfaceSize(const Size(1000, 1800));
     addTearDown(() => t.binding.setSurfaceSize(null));
 
-    await t.pumpWidget(const FreshRouteApp());
+    await t.pumpWidget(const FreshGardeApp());
     await settle(t, 1700);
 
     // Login with the documented demo account.

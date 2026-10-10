@@ -9,7 +9,7 @@ Replace `run_model_on_image` / `run_model_on_video` with calls to your real mode
 from fastapi import FastAPI, File, Form, UploadFile
 from fastapi.middleware.cors import CORSMiddleware
 
-app = FastAPI(title="FreshRoute AI inspection")
+app = FastAPI(title="FreshGarde inspection")
 
 # Needed when the Flutter app runs in Chrome (different origin).
 app.add_middleware(CORSMiddleware, allow_origins=["*"], allow_methods=["*"], allow_headers=["*"])

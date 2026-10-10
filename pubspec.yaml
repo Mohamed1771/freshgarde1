@@ -1,5 +1,5 @@
-name: freshroute_platform
-description: "FreshRoute AI - B2B agricultural trade and AI-assisted refrigerated transport platform (demo)."
+name: freshgarde
+description: "FreshGarde - B2B agricultural trade and AI-assisted refrigerated transport platform (demo)."
 publish_to: 'none'
 version: 1.0.0+1
 

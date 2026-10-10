@@ -88,7 +88,7 @@ class SettingsScreen extends StatelessWidget {
                 trailing: const Text('v1.0.0 (تجريبي)'),
                 onTap: () => showAboutDialog(
                   context: context,
-                  applicationName: 'FreshRoute AI',
+                  applicationName: 'FreshGarde',
                   applicationVersion: '1.0.0 demo',
                   children: const [Text('منصة B2B للتجارة الزراعية والنقل المبرّد الذكي. جميع البيانات في هذه النسخة تجريبية.')],
                 ),

@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../theme/app_colors.dart';
 
-/// The FreshRoute logo (transparent PNG).
+/// The FreshGarde logo (transparent PNG).
 class BrandLogo extends StatelessWidget {
   const BrandLogo({super.key, this.size = 72});
   final double size;
@@ -23,7 +23,7 @@ class BrandTitle extends StatelessWidget {
     final t = Theme.of(context).textTheme;
     final c = light ? AppColors.white : AppColors.navy;
     return Column(mainAxisSize: MainAxisSize.min, children: [
-      Text('FreshRoute AI', style: t.headlineMedium?.copyWith(color: c), textDirection: TextDirection.ltr),
+      Text('FreshGarde', style: t.headlineMedium?.copyWith(color: c), textDirection: TextDirection.ltr),
       Text('منصة التجارة الزراعية والنقل المبرّد الذكي', style: t.bodyMedium?.copyWith(color: c.withValues(alpha: 0.75))),
     ]);
   }

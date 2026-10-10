@@ -15,7 +15,7 @@ import 'scene_config.dart';
 /// For a same-origin page (the bundled asset) we install `window.FR` inside the iframe and
 /// evaluate commands directly. For a cross-origin hosted scene, commands are sent with
 /// `postMessage({type:'fr-command', js})` and snapshots are expected back via
-/// `parent.postMessage({source:'freshroute-sim', ...snapshot}, '*')` (see README).
+/// `parent.postMessage({source:'freshgarde-sim', ...snapshot}, '*')` (see README).
 class SceneViewport extends StatefulWidget {
   const SceneViewport({super.key, required this.onReady, required this.onClosed});
   final SceneReady onReady;
@@ -27,7 +27,7 @@ class SceneViewport extends StatefulWidget {
 
 class _SceneViewportState extends State<SceneViewport> {
   static int _seq = 0;
-  late final String _viewType = 'freshroute-sim-${_seq++}';
+  late final String _viewType = 'freshgarde-sim-${_seq++}';
   final _messages = StreamController<Map<String, dynamic>>.broadcast();
   web.HTMLIFrameElement? _iframe;
   JSFunction? _windowListener;
@@ -54,7 +54,7 @@ class _SceneViewportState extends State<SceneViewport> {
     // Cross-origin scenes report through window.postMessage.
     _windowListener = ((web.MessageEvent e) {
       final data = e.data.dartify();
-      if (data is Map && data['source'] == 'freshroute-sim') {
+      if (data is Map && data['source'] == 'freshgarde-sim') {
         _messages.add(data.map((k, v) => MapEntry(k.toString(), v)));
       }
     }).toJS;

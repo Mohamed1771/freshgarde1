@@ -1,8 +1,8 @@
 <div align="center">
 
-<img src="assets/images/logo.png" width="120" alt="FreshRoute AI logo"/>
+<img src="assets/images/logo.png" width="120" alt="FreshGarde logo"/>
 
-# FreshRoute AI
+# FreshGarde
 
 **منصة أردنية للتجارة الزراعية والنقل المبرّد الذكي**
 B2B agricultural trade + AI-assisted refrigerated transport for Jordanian traders
@@ -15,7 +15,7 @@ Flutter · Material 3 · Arabic RTL · Android · iOS · Web
 
 ## نظرة عامة (بالعربي)
 
-FreshRoute AI تطبيق للتجّار الأردنيين لتصدير واستيراد الخضار والفواكه ومتابعة الشحنات المبرّدة لحظيًا.
+FreshGarde تطبيق للتجّار الأردنيين لتصدير واستيراد الخضار والفواكه ومتابعة الشحنات المبرّدة لحظيًا.
 
 - **السوق:** عروض تصدير واستيراد بالصور (بندورة، خيار، بطاطا).
 - **إنشاء شحنة تصدير** من الأردن إلى داخل المملكة (حسب المحافظة) أو إلى الخارج (السعودية، الإمارات، قطر، الكويت، البحرين، عُمان، العراق، لبنان، مصر).
@@ -64,8 +64,8 @@ FreshRoute AI تطبيق للتجّار الأردنيين لتصدير واست
 Requirements: **Flutter 3.47+ (Dart 3.13+)**, Chrome for web, Android Studio / an emulator or a device for Android.
 
 ```bash
-git clone <this repository>
-cd freshroute_platform
+git clone https://github.com/<user>/freshgarde.git
+cd freshgarde
 flutter pub get
 
 # Web (Chrome). Release mode is the most reliable way to run locally.
@@ -226,7 +226,7 @@ The bundled scene is `assets/sim/index.html` (an offline build of the existing s
   own side panel and evaluates commands directly. Chosen through a conditional export (`scene_viewport.dart`),
   so web-only libraries never reach mobile builds.
 * **Hosted scene:** set `SceneConfig.hostedUrl` in `scene_config.dart`. A cross-origin page on the web must accept
-  `postMessage({type: 'fr-command', js})` and post snapshots with `parent.postMessage({source: 'freshroute-sim', ...}, '*')`.
+  `postMessage({type: 'fr-command', js})` and post snapshots with `parent.postMessage({source: 'freshgarde-sim', ...}, '*')`.
 
 `SimulationBridge` maps to `window.FreshRouteAPI`:
 

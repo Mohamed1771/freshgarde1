@@ -57,7 +57,7 @@ class _LoginScreenState extends State<LoginScreen> {
     return AuthScaffold(
       showBack: false,
       title: 'تسجيل الدخول',
-      subtitle: 'أهلًا بك في FreshRoute AI',
+      subtitle: 'أهلًا بك في FreshGarde',
       child: Form(
         key: _form,
         child: Column(crossAxisAlignment: CrossAxisAlignment.stretch, children: [

@@ -1,4 +1,4 @@
-package com.freshroute.freshroute_platform
+package com.freshgarde.app
 
 import io.flutter.embedding.android.FlutterActivity
 

@@ -1,15 +1,15 @@
 import 'dart:typed_data';
 
 import 'package:flutter_test/flutter_test.dart';
-import 'package:freshroute_platform/features/simulation/mock_simulation_bridge.dart';
-import 'package:freshroute_platform/features/simulation/mock_simulation_engine.dart';
-import 'package:freshroute_platform/shared/models/inspection_result.dart';
-import 'package:freshroute_platform/shared/models/shipment.dart';
-import 'package:freshroute_platform/shared/models/simulation_scenario.dart';
-import 'package:freshroute_platform/shared/models/simulation_state.dart';
-import 'package:freshroute_platform/shared/repositories/notification_repository.dart';
-import 'package:freshroute_platform/shared/repositories/shipment_repository.dart';
-import 'package:freshroute_platform/shared/services/ai_inspection_service.dart';
+import 'package:freshgarde/features/simulation/mock_simulation_bridge.dart';
+import 'package:freshgarde/features/simulation/mock_simulation_engine.dart';
+import 'package:freshgarde/shared/models/inspection_result.dart';
+import 'package:freshgarde/shared/models/shipment.dart';
+import 'package:freshgarde/shared/models/simulation_scenario.dart';
+import 'package:freshgarde/shared/models/simulation_state.dart';
+import 'package:freshgarde/shared/repositories/notification_repository.dart';
+import 'package:freshgarde/shared/repositories/shipment_repository.dart';
+import 'package:freshgarde/shared/services/ai_inspection_service.dart';
 
 void main() {
   group('MockAiInspectionService', () {

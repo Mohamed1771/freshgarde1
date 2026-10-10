@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-/// Brand palette derived from the FreshRoute logo: leaf green → teal → cyan → deep blue.
+/// Brand palette derived from the FreshGarde logo: leaf green → teal → cyan → deep blue.
 abstract final class AppColors {
   static const navy = Color(0xFF0B3B5E);
   static const primary = Color(0xFF1279C6);

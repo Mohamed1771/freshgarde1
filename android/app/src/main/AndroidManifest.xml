@@ -3,7 +3,7 @@
     <uses-permission android:name="android.permission.INTERNET"/>
     <!-- usesCleartextTraffic allows a local http:// FastAPI server during development; disable for production. -->
     <application
-        android:label="FreshRoute AI"
+        android:label="FreshGarde"
         android:usesCleartextTraffic="true"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
