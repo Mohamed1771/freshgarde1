@@ -24,7 +24,7 @@ class OfferCard extends StatelessWidget {
           AspectRatio(
             aspectRatio: 16 / 9,
             child: Stack(fit: StackFit.expand, children: [
-              Image.asset(o.imageAsset, fit: BoxFit.cover),
+              OfferImage(offer: o),
               PositionedDirectional(top: 10, start: 10, child: OfferTypeBadge(type: o.type)),
             ]),
           ),
@@ -36,7 +36,7 @@ class OfferCard extends StatelessWidget {
               Row(children: [
                 const Icon(Icons.route_outlined, size: 16, color: AppColors.textSecondary),
                 const SizedBox(width: 6),
-                Expanded(child: Text('${o.origin} ← ${o.destination}', style: t.bodySmall)),
+                Expanded(child: Text('${o.origin} ← ${o.destinationsLabel}', style: t.bodySmall, maxLines: 1, overflow: TextOverflow.ellipsis)),
               ]),
               const SizedBox(height: 10),
               Row(children: [
@@ -48,6 +48,25 @@ class OfferCard extends StatelessWidget {
             ]),
           ),
         ]),
+      ),
+    );
+  }
+}
+
+/// Product photo, or a coloured placeholder for products without one.
+class OfferImage extends StatelessWidget {
+  const OfferImage({super.key, required this.offer});
+  final TradingOffer offer;
+
+  @override
+  Widget build(BuildContext context) {
+    final asset = offer.imageAsset;
+    if (asset != null) return Image.asset(asset, fit: BoxFit.cover);
+    final c = offer.product.color;
+    return DecoratedBox(
+      decoration: BoxDecoration(gradient: LinearGradient(colors: [c.withValues(alpha: 0.25), c.withValues(alpha: 0.55)])),
+      child: Center(
+        child: Text(offer.product.name, style: const TextStyle(color: AppColors.white, fontSize: 30, fontWeight: FontWeight.w800)),
       ),
     );
   }

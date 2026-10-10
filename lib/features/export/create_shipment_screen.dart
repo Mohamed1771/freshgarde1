@@ -13,8 +13,10 @@ import '../../shared/models/inspection_result.dart';
 import '../../shared/models/product.dart';
 import '../../shared/models/sensor_reading.dart';
 import '../../shared/models/shipment.dart';
+import '../../shared/models/trading_offer.dart';
 import '../../shared/repositories/auth_repository.dart';
 import '../../shared/repositories/mock_data.dart';
+import '../../shared/repositories/offer_repository.dart';
 import '../../shared/repositories/shipment_repository.dart';
 
 /// Multi-step export shipment wizard. Submitting adds the shipment to the in-memory repository.
@@ -26,7 +28,7 @@ class CreateShipmentScreen extends StatefulWidget {
 }
 
 class _CreateShipmentScreenState extends State<CreateShipmentScreen> {
-  static const _steps = ['المصدّر', 'المستورد', 'المنتج', 'النقل', 'المراجعة'];
+  static const _steps = ['المصدّر', 'المستقبِل', 'المنتج', 'النقل', 'المراجعة'];
   final _forms = List.generate(4, (_) => GlobalKey<FormState>());
   int _step = 0;
   bool _loading = false;
@@ -43,6 +45,11 @@ class _CreateShipmentScreenState extends State<CreateShipmentScreen> {
   final _impCompany = TextEditingController();
   final _impPhone = TextEditingController();
   final _impAddress = TextEditingController();
+
+  /// null until chosen; true = receiver known, false = list the shipment in the market.
+  bool? _receiverKnown;
+  final Set<String> _allowedCities = {};
+  final _price = TextEditingController();
   String? _impCountry;
   // Product
   Product? _product;
@@ -77,7 +84,7 @@ class _CreateShipmentScreenState extends State<CreateShipmentScreen> {
 
   @override
   void dispose() {
-    for (final c in [_expName, _expCompany, _expPhone, _expCr, _impName, _impCompany, _impPhone, _impAddress, _variety, _qty, _plate, _driver, _driverPhone]) {
+    for (final c in [_expName, _expCompany, _expPhone, _expCr, _impName, _impCompany, _impPhone, _impAddress, _price, _variety, _qty, _plate, _driver, _driverPhone]) {
       c.dispose();
     }
     super.dispose();
@@ -115,6 +122,14 @@ class _CreateShipmentScreenState extends State<CreateShipmentScreen> {
       return;
     }
     setState(() => _loading = true);
+    if (_receiverKnown!) {
+      await _createShipment();
+    } else {
+      await _listInMarket();
+    }
+  }
+
+  Future<void> _createShipment() async {
     final repo = context.read<ShipmentRepository>();
     final p = _product!;
     final shipment = Shipment(
@@ -165,6 +180,51 @@ class _CreateShipmentScreenState extends State<CreateShipmentScreen> {
     if (action == 'details') Navigator.pushNamed(context, Routes.shipmentDetails, arguments: shipment.id);
   }
 
+  /// No known receiver: publish the shipment as an export offer. An importer completes the
+  /// delivery city and receiving party with an import request.
+  Future<void> _listInMarket() async {
+    final offers = context.read<OfferRepository>();
+    final p = _product!;
+    final offer = TradingOffer(
+      id: offers.nextId(),
+      type: OfferType.export,
+      product: p,
+      variety: _variety.text.trim(),
+      imageAsset: MockData.productPhotos[p.id],
+      quantityTons: double.parse(_qty.text),
+      pricePerTonJod: double.parse(_price.text),
+      origin: _origin!,
+      allowedDestinations: [for (final c in MockData.destinations) if (_allowedCities.contains(c)) c],
+      partner: _expCompany.text.trim(),
+      partnerContact: _expName.text.trim(),
+      description: '${p.name} ${_variety.text.trim()} — $_grade، $_packaging. نقل مبرّد عند ${Fmt.temp(_setpoint)}.',
+      packaging: _packaging!,
+      departure: _departure!,
+      truckType: _truckType!,
+      truckPlate: _plate.text.trim(),
+      driverName: _driver.text.trim(),
+      coolingSetpointC: _setpoint,
+      smartCooling: _smartCooling,
+    );
+    await offers.add(offer);
+    if (!mounted) return;
+    setState(() => _loading = false);
+
+    await showDialog<void>(
+      context: context,
+      barrierDismissible: false,
+      builder: (c) => AlertDialog(
+        icon: const Icon(Icons.storefront, color: AppColors.success, size: 52),
+        title: const Text('تم عرض الشحنة في السوق'),
+        content: Text('يظهر عرضك الآن في السوق ضمن عروض التصدير. عندما يطلبه مستورد ويحدد مدينة التسليم (${offer.destinationsLabel}) تُنشأ الشحنة.'),
+        actions: [FilledButton(onPressed: () => Navigator.pop(c), child: const Text('عرض في السوق'))],
+      ),
+    );
+    if (!mounted) return;
+    context.read<ShellController>().openMarketplace();
+    Navigator.popUntil(context, ModalRoute.withName(Routes.home));
+  }
+
   @override
   Widget build(BuildContext context) => PopScope(
         canPop: _step == 0,
@@ -177,7 +237,7 @@ class _CreateShipmentScreenState extends State<CreateShipmentScreen> {
             isFirst: _step == 0,
             isLast: _step == _steps.length - 1,
             loading: _loading,
-            lastLabel: 'تأكيد وإنشاء الشحنة',
+            lastLabel: _receiverKnown == false ? 'عرض الشحنة في السوق' : 'تأكيد وإنشاء الشحنة',
             onBack: () => setState(() => _step--),
             onNext: _next,
           ),
@@ -189,7 +249,7 @@ class _CreateShipmentScreenState extends State<CreateShipmentScreen> {
                 const SizedBox(height: 20),
                 switch (_step) {
                   0 => _exporter(),
-                  1 => _importer(),
+                  1 => _receiver(),
                   2 => _productStep(),
                   3 => _transport(),
                   _ => _review(),
@@ -225,9 +285,47 @@ class _CreateShipmentScreenState extends State<CreateShipmentScreen> {
         ]),
       );
 
-  Widget _importer() => Form(
-        key: _forms[1],
-        child: Column(crossAxisAlignment: CrossAxisAlignment.stretch, children: [
+  Widget _receiver() {
+    final t = Theme.of(context).textTheme;
+    return Form(
+      key: _forms[1],
+      child: Column(crossAxisAlignment: CrossAxisAlignment.stretch, children: [
+        Text('هل الجهة المستقبِلة للشحنة معلومة؟', style: t.titleSmall),
+        const SizedBox(height: 10),
+        FormField<bool>(
+          initialValue: _receiverKnown,
+          validator: (_) => _receiverKnown == null ? 'اختر أحد الخيارين' : null,
+          builder: (state) => Column(crossAxisAlignment: CrossAxisAlignment.stretch, children: [
+            _ChoiceTile(
+              icon: Icons.handshake_outlined,
+              title: 'نعم، المستقبِل معلوم',
+              subtitle: 'أدخل بيانات المستورد ومكان التسليم',
+              selected: _receiverKnown == true,
+              onTap: () {
+                setState(() => _receiverKnown = true);
+                state.didChange(true);
+              },
+            ),
+            const SizedBox(height: 10),
+            _ChoiceTile(
+              icon: Icons.storefront_outlined,
+              title: 'لا، اعرضها في السوق',
+              subtitle: 'حدّد المدن التي يمكنك التصدير إليها ليطلبها مستورد',
+              selected: _receiverKnown == false,
+              onTap: () {
+                setState(() => _receiverKnown = false);
+                state.didChange(false);
+              },
+            ),
+            if (state.hasError)
+              Padding(
+                padding: const EdgeInsets.only(top: 6),
+                child: Text(state.errorText!, style: t.bodySmall?.copyWith(color: AppColors.danger)),
+              ),
+          ]),
+        ),
+        const SizedBox(height: 18),
+        if (_receiverKnown == true) ...[
           _text(_impCompany, 'اسم الشركة المستوردة', Icons.business_outlined),
           _text(_impName, 'اسم المسؤول لدى المستورد', Icons.person_outline),
           AppDropdown<String>(
@@ -238,9 +336,55 @@ class _CreateShipmentScreenState extends State<CreateShipmentScreen> {
             onChanged: (v) => setState(() => _impCountry = v),
           ),
           _text(_impPhone, 'هاتف المستورد (دولي)', Icons.phone_outlined, validator: Validators.phone, keyboard: TextInputType.phone, hint: '+9715XXXXXXXX'),
+          AppDropdown<String>(
+            label: 'مدينة الوصول',
+            icon: Icons.flag_outlined,
+            items: MockData.destinations,
+            value: _destination,
+            onChanged: (v) => setState(() => _destination = v),
+          ),
           _text(_impAddress, 'عنوان التسليم', Icons.location_on_outlined),
-        ]),
-      );
+          DateField(
+            label: 'تاريخ الوصول المتوقع',
+            value: _arrival,
+            firstDate: DateTime.now().add(const Duration(days: 1)),
+            onChanged: (d) => setState(() => _arrival = d),
+          ),
+        ],
+        if (_receiverKnown == false) ...[
+          Text('المدن التي يمكنك التصدير إليها', style: t.titleSmall),
+          const SizedBox(height: 8),
+          FormField<Set<String>>(
+            initialValue: _allowedCities,
+            validator: (_) => _allowedCities.isEmpty ? 'اختر مدينة واحدة على الأقل' : null,
+            builder: (state) => Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+              Wrap(spacing: 8, runSpacing: 8, children: [
+                for (final c in MockData.destinations)
+                  FilterChip(
+                    label: Text(c),
+                    selected: _allowedCities.contains(c),
+                    onSelected: (v) {
+                      setState(() => v ? _allowedCities.add(c) : _allowedCities.remove(c));
+                      state.didChange(_allowedCities);
+                    },
+                  ),
+              ]),
+              if (state.hasError)
+                Padding(
+                  padding: const EdgeInsets.only(top: 6),
+                  child: Text(state.errorText!, style: t.bodySmall?.copyWith(color: AppColors.danger)),
+                ),
+            ]),
+          ),
+          const SizedBox(height: 16),
+          _text(_price, 'السعر المطلوب (دينار للطن)', Icons.payments_outlined,
+              keyboard: const TextInputType.numberWithOptions(decimal: true),
+              validator: (v) => Validators.positiveNumber(v, min: 1, max: 100000, field: 'السعر')),
+          const InlineMessage(text: 'سيكمل المستورد مدينة التسليم وبيانات الجهة المستلمة عند طلب العرض.'),
+        ],
+      ]),
+    );
+  }
 
   Widget _productStep() => Form(
         key: _forms[2],
@@ -317,42 +461,25 @@ class _CreateShipmentScreenState extends State<CreateShipmentScreen> {
         _text(_plate, 'رقم لوحة الشاحنة', Icons.pin_outlined, validator: Validators.plate, hint: '22-12345'),
         _text(_driver, 'اسم السائق', Icons.badge_outlined),
         _text(_driverPhone, 'هاتف السائق', Icons.phone_outlined, validator: Validators.jordanPhone, keyboard: TextInputType.phone),
-        Row(children: [
-          Expanded(
-            child: AppDropdown<String>(
-              label: 'نقطة الانطلاق',
-              items: MockData.originHubs,
-              value: _origin,
-              onChanged: (v) => setState(() => _origin = v),
-            ),
-          ),
-          const SizedBox(width: 10),
-          Expanded(
-            child: AppDropdown<String>(
-              label: 'الوجهة',
-              items: MockData.destinations,
-              value: _destination,
-              onChanged: (v) => setState(() => _destination = v),
-              validator: (v) => v == null ? 'اختر الوجهة' : (v == _origin ? 'الوجهة مطابقة للانطلاق' : null),
-            ),
-          ),
-        ]),
+        AppDropdown<String>(
+          label: 'نقطة الانطلاق',
+          icon: Icons.place_outlined,
+          items: MockData.originHubs,
+          value: _origin,
+          onChanged: (v) => setState(() => _origin = v),
+          validator: (v) => v == null
+              ? 'اختر نقطة الانطلاق'
+              : (_receiverKnown == true && v == _destination ? 'نقطة الانطلاق مطابقة لمدينة الوصول' : null),
+        ),
         DateField(
           label: 'تاريخ الانطلاق',
           value: _departure,
-          onChanged: (d) => setState(() {
-            _departure = d;
-            if (_arrival != null && !_arrival!.isAfter(d)) _arrival = null;
-          }),
-        ),
-        DateField(
-          label: 'تاريخ الوصول المتوقع',
-          value: _arrival,
-          firstDate: _departure?.add(const Duration(days: 1)),
-          onChanged: (d) => setState(() => _arrival = d),
+          onChanged: (d) => setState(() => _departure = d),
           validator: (v) {
-            if (v == null) return 'تاريخ الوصول مطلوب';
-            if (_departure != null && !v.isAfter(_departure!)) return 'يجب أن يكون بعد تاريخ الانطلاق';
+            if (v == null) return 'تاريخ الانطلاق مطلوب';
+            if (_receiverKnown == true && _arrival != null && !_arrival!.isAfter(v)) {
+              return 'يجب أن يكون قبل تاريخ الوصول (${Fmt.date(_arrival!)})';
+            }
             return null;
           },
         ),
@@ -426,18 +553,27 @@ class _CreateShipmentScreenState extends State<CreateShipmentScreen> {
           Expanded(
             child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
               Text('${p.name} — ${_variety.text}', style: t.titleMedium),
-              Text('${Fmt.tons(double.parse(_qty.text))} • $_origin ← $_destination', style: t.bodySmall),
+              Text('${Fmt.tons(double.parse(_qty.text))} • $_origin ← ${_receiverKnown! ? _destination : _allowedCities.join('، ')}', style: t.bodySmall),
             ]),
           ),
         ]),
       ),
       const SizedBox(height: 12),
       section('المصدّر', [InfoRow(label: 'المنشأة', value: _expCompany.text), InfoRow(label: 'المسؤول', value: _expName.text)], 0),
-      section('المستورد', [
-        InfoRow(label: 'الشركة', value: _impCompany.text),
-        InfoRow(label: 'الدولة', value: _impCountry ?? '-'),
-        InfoRow(label: 'العنوان', value: _impAddress.text),
-      ], 1),
+      if (_receiverKnown!)
+        section('المستقبِل', [
+          InfoRow(label: 'الشركة', value: _impCompany.text),
+          InfoRow(label: 'الدولة', value: _impCountry ?? '-'),
+          InfoRow(label: 'مدينة الوصول', value: _destination ?? '-'),
+          InfoRow(label: 'العنوان', value: _impAddress.text),
+          InfoRow(label: 'الوصول المتوقع', value: Fmt.date(_arrival!)),
+        ], 1)
+      else
+        section('العرض في السوق', [
+          const InfoRow(label: 'المستقبِل', value: 'غير محدد — يُعرض في السوق'),
+          InfoRow(label: 'مدن التصدير', value: _allowedCities.join('، ')),
+          InfoRow(label: 'السعر', value: '${Fmt.money(double.parse(_price.text))} / طن'),
+        ], 1),
       section('المنتج', [
         InfoRow(label: 'التعبئة', value: _packaging ?? '-'),
         InfoRow(label: 'الدرجة', value: _grade),
@@ -448,7 +584,6 @@ class _CreateShipmentScreenState extends State<CreateShipmentScreen> {
         InfoRow(label: 'الشاحنة', value: '$_truckType • ${_plate.text}'),
         InfoRow(label: 'السائق', value: _driver.text),
         InfoRow(label: 'الانطلاق', value: Fmt.date(_departure!)),
-        InfoRow(label: 'الوصول', value: Fmt.date(_arrival!)),
         InfoRow(label: 'التبريد', value: '${Fmt.temp(_setpoint)}${_smartCooling ? ' • ذكي' : ''}'),
         InfoRow(label: 'المستندات', value: '${_docs.length} ملفات'),
       ], 3),
@@ -460,5 +595,44 @@ class _CreateShipmentScreenState extends State<CreateShipmentScreen> {
         title: const Text('أؤكد صحة بيانات الشحنة ومطابقتها للمستندات المرفقة.'),
       ),
     ]);
+  }
+}
+
+class _ChoiceTile extends StatelessWidget {
+  const _ChoiceTile({required this.icon, required this.title, required this.subtitle, required this.selected, required this.onTap});
+  final IconData icon;
+  final String title;
+  final String subtitle;
+  final bool selected;
+  final VoidCallback onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    final t = Theme.of(context).textTheme;
+    return Material(
+      color: selected ? AppColors.ice : AppColors.white,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(14),
+        side: BorderSide(color: selected ? AppColors.primary : AppColors.border, width: selected ? 1.6 : 1),
+      ),
+      child: InkWell(
+        borderRadius: BorderRadius.circular(14),
+        onTap: onTap,
+        child: Padding(
+          padding: const EdgeInsets.all(14),
+          child: Row(children: [
+            Icon(icon, color: selected ? AppColors.primary : AppColors.textSecondary),
+            const SizedBox(width: 12),
+            Expanded(
+              child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+                Text(title, style: t.titleSmall),
+                Text(subtitle, style: t.bodySmall),
+              ]),
+            ),
+            Icon(selected ? Icons.radio_button_checked : Icons.radio_button_unchecked, color: selected ? AppColors.primary : AppColors.textMuted),
+          ]),
+        ),
+      ),
+    );
   }
 }

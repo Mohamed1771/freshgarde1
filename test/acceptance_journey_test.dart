@@ -1,77 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:freshroute_platform/app/app.dart';
 import 'package:freshroute_platform/shared/models/shipment.dart';
 import 'package:freshroute_platform/shared/repositories/shipment_repository.dart';
-import 'package:freshroute_platform/shared/repositories/mock_data.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 
-/// Final acceptance journey (spec §14), driven end to end through the real UI:
-/// login → home → marketplace → create export shipment → My Shipments → AI inspection
-/// (sample image) → apply → simulation → advance time → cooling failure alert → shipment details.
+import 'helpers.dart';
+
+/// Main journey through the real UI: login → home → marketplace → export shipment with a known
+/// receiver → My Shipments → live simulation (departure, time passing, scenario alerts).
 void main() {
   setUpAll(() => GoogleFonts.config.allowRuntimeFetching = false);
 
-  Future<void> settle(WidgetTester t, [int ms = 1200]) async {
-    await t.pump(Duration(milliseconds: ms));
-    await t.pumpAndSettle();
-  }
-
-  Future<void> tapText(WidgetTester t, String text, {bool last = false}) async {
-    final f = last ? find.text(text).last : find.text(text).first;
-    await t.ensureVisible(f);
-    await t.pumpAndSettle();
-    await t.tap(f);
-    await t.pumpAndSettle();
-  }
-
-  Future<void> enter(WidgetTester t, String label, String value) async {
-    final f = find.widgetWithText(TextFormField, label).first;
-    await t.ensureVisible(f);
-    await t.enterText(f, value);
-    await t.pump();
-  }
-
-  Future<void> pick(WidgetTester t, String label, String option) async {
-    final f = find.text(label).last; // .last skips the step title when it has the same text
-    await t.ensureVisible(f);
-    await t.pumpAndSettle();
-    await t.tap(f);
-    await t.pumpAndSettle();
-    await t.tap(find.text(option).last);
-    await t.pumpAndSettle();
-  }
-
-  Future<void> pickDate(WidgetTester t, String label) async {
-    final f = find.widgetWithText(InputDecorator, label).first;
-    await t.ensureVisible(f);
-    await t.pumpAndSettle();
-    await t.tap(f);
-    await t.pumpAndSettle();
-    // Confirm button of the Material date picker (Arabic localisation).
-    final ok = find.byWidgetPredicate((w) => w is TextButton && w.child is Text && ['حسنًا', 'حسنا', 'موافق', 'OK'].contains((w.child as Text).data));
-    await t.tap(ok.last);
-    await t.pumpAndSettle();
-  }
-
-  Future<void> useDemoDocument(WidgetTester t, String label) async {
-    await tapText(t, '$label *');
-    await tapText(t, 'استخدام ملف تجريبي');
-  }
-
   testWidgets('full demo journey', (t) async {
-    await t.binding.setSurfaceSize(const Size(1000, 1800));
-    addTearDown(() => t.binding.setSurfaceSize(null));
-
-    await t.pumpWidget(const FreshRouteApp());
-    await settle(t, 1700);
-
-    // Login with the documented demo account.
-    await t.enterText(find.byType(TextFormField).at(0), MockData.demoEmail);
-    await t.enterText(find.byType(TextFormField).at(1), MockData.demoPassword);
-    await tapText(t, 'دخول');
-    await settle(t);
+    await launchAndLogin(t);
     expect(find.text('العروض المتاحة'), findsOneWidget);
 
     // Marketplace: three photo offers, two export and one import.
@@ -87,33 +29,18 @@ void main() {
     expect(find.text('إنشاء شحنة تصدير'), findsOneWidget);
     await tapText(t, 'التالي'); // Step 1 is prefilled from the profile.
 
+    // Receiver known: importer details, arrival city and date.
+    await tapText(t, 'نعم، المستقبِل معلوم');
     await enter(t, 'اسم الشركة المستوردة', 'الدوحة للخضار');
     await enter(t, 'اسم المسؤول لدى المستورد', 'ناصر');
     await pick(t, 'دولة المستورد', 'قطر');
     await enter(t, 'هاتف المستورد (دولي)', '+97455512345');
+    await pick(t, 'مدينة الوصول', 'الدوحة');
     await enter(t, 'عنوان التسليم', 'السوق المركزي');
-    await tapText(t, 'التالي');
-
-    await pick(t, 'المنتج', '🍅  بندورة');
-    await enter(t, 'الصنف', 'بندورة شيري');
-    await enter(t, 'الكمية (طن)', '10');
-    await pick(t, 'نوع التعبئة', 'كراتين 5 كغ');
-    await pickDate(t, 'تاريخ القطاف');
-    await tapText(t, 'التالي');
-
-    await pick(t, 'نوع الشاحنة', 'براد 20 قدم');
-    await enter(t, 'رقم لوحة الشاحنة', '22-12345');
-    await enter(t, 'اسم السائق', 'سامر');
-    await enter(t, 'هاتف السائق', '0791112233');
-    await pick(t, 'نقطة الانطلاق', 'عمّان');
-    await pick(t, 'الوجهة', 'الدوحة');
-    await pickDate(t, 'تاريخ الانطلاق');
-    // The arrival picker opens on the first allowed day (departure + 1).
     await pickDate(t, 'تاريخ الوصول المتوقع');
-    await useDemoDocument(t, 'شهادة الصحة النباتية');
-    await useDemoDocument(t, 'شهادة المنشأ');
-    await useDemoDocument(t, 'الفاتورة التجارية');
     await tapText(t, 'التالي');
+
+    await fillProductAndTransport(t);
 
     expect(find.text('المراجعة'), findsWidgets);
     await tapText(t, 'أؤكد صحة بيانات الشحنة ومطابقتها للمستندات المرفقة.');

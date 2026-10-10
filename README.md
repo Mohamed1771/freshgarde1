@@ -34,7 +34,11 @@ The login screen no longer shows these details. A newly registered trader lands 
 
 * **Home** — import / export / my shipments shortcuts, critical-alert banner, and the marketplace offers.
 * **Marketplace (السوق)** — three offers with photos: tomatoes and cucumbers (export), potatoes (import).
-* **Export** — 5-step shipment wizard; the new shipment appears in My Shipments → Pending.
+* **Export** — 5-step shipment wizard. In the receiver step the exporter chooses:
+  * *receiver known* → importer details, arrival city and date → a pending shipment in My Shipments;
+  * *list in the market* → cities they can export to + asking price → an export offer in the marketplace.
+* **Import request** — from any offer: the importer picks the delivery city (from the allowed ones), address,
+  arrival date and receiving party → a pending shipment is created and the offer leaves the market.
 * **My Shipments** — Active / Pending / Delivered / Archived; opening one shows the live 3D simulation.
 * **Account** — profile, settings (notifications, alert threshold, simulation speed), logout.
 

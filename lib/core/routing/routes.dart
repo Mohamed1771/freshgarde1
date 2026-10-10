@@ -9,6 +9,7 @@ import '../../features/auth/splash_screen.dart';
 import '../../features/auth/verification_pending_screen.dart';
 import '../../features/dashboard/main_shell.dart';
 import '../../features/export/create_shipment_screen.dart';
+import '../../features/marketplace/import_request_screen.dart';
 import '../../features/marketplace/offer_details_screen.dart';
 import '../../features/notifications/notifications_screen.dart';
 import '../../features/settings/settings_screen.dart';
@@ -25,6 +26,7 @@ abstract final class Routes {
   static const verificationPending = '/verification-pending';
   static const home = '/home';
   static const offerDetails = '/offer';
+  static const importRequest = '/import-request';
   static const createShipment = '/export/create';
   static const shipmentDetails = '/shipment';
   static const simulation = '/simulation';
@@ -43,6 +45,7 @@ abstract final class Routes {
       verificationPending => const VerificationPendingScreen(),
       home => const MainShell(),
       offerDetails => OfferDetailsScreen(offerId: arg as String),
+      importRequest => ImportRequestScreen(offerId: arg as String),
       createShipment => const CreateShipmentScreen(),
       shipmentDetails => ShipmentDetailsScreen(shipmentId: arg as String?),
       // The simulation is part of the live shipment view.
