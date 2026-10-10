@@ -45,80 +45,48 @@ abstract final class MockData {
         ],
       );
 
-  /// Product photos available for offers.
-  static const productPhotos = {
-    'tomato': 'assets/images/offer_tomato.png',
-    'cucumber': 'assets/images/offer_cucumber.png',
-    'potato': 'assets/images/offer_potato.png',
-  };
-
-  /// The marketplace offers (two export, one import), with real product photos.
-  static List<TradingOffer> offers() {
-    final now = DateTime.now();
-    final day = DateTime(now.year, now.month, now.day);
-    return [
-      TradingOffer(
-        id: 'OF-201',
-        type: OfferType.export,
-        product: Products.tomato,
-        variety: 'بندورة بلدية',
-        imageAsset: productPhotos['tomato'],
-        quantityTons: 24,
-        pricePerTonJod: 520,
-        origin: 'الأغوار الشمالية',
-        allowedDestinations: const ['دبي', 'الرياض', 'الدوحة'],
-        partner: 'شركة وادي الأردن للتصدير الزراعي',
-        partnerContact: 'أحمد الخطيب',
-        description: 'بندورة مقطوفة حديثًا ومفروزة في صناديق 10 كغ، جاهزة للنقل المبرّد عند 12°C.',
-        packaging: 'صناديق بلاستيك 10 كغ',
-        departure: day.add(const Duration(days: 2)),
-        truckType: 'براد 40 قدم (Reefer)',
-        truckPlate: '22-48120',
-        driverName: 'محمود العلي',
-        coolingSetpointC: 12,
-      ),
-      TradingOffer(
-        id: 'OF-202',
-        type: OfferType.export,
-        product: Products.cucumber,
-        variety: 'خيار بلدي',
-        imageAsset: productPhotos['cucumber'],
-        quantityTons: 18,
-        pricePerTonJod: 310,
-        origin: 'الأغوار الوسطى',
-        allowedDestinations: const ['الرياض', 'الكويت', 'المنامة'],
-        partner: 'شركة وادي الأردن للتصدير الزراعي',
-        partnerContact: 'أحمد الخطيب',
-        description: 'خيار متوسط الحجم مغلّف بأكياس حفظ الرطوبة داخل صناديق مهوّاة.',
-        packaging: 'كراتين 5 كغ',
-        departure: day.add(const Duration(days: 3)),
-        truckType: 'براد 20 قدم',
-        truckPlate: '13-55204',
-        driverName: 'يوسف حداد',
-        coolingSetpointC: 11,
-      ),
-      TradingOffer(
-        id: 'OF-203',
-        type: OfferType.import,
-        product: Products.potato,
-        variety: 'بطاطا سبونتا',
-        imageAsset: productPhotos['potato'],
-        quantityTons: 40,
-        pricePerTonJod: 240,
-        origin: 'مصر — الإسكندرية',
-        allowedDestinations: const ['عمّان', 'الزرقاء', 'إربد'],
-        partner: 'مؤسسة الدلتا للتصدير',
-        partnerContact: 'كريم منصور',
-        description: 'بطاطا للاستيراد بأحجام متجانسة، مناسبة للتخزين الطويل عند 7°C.',
-        packaging: 'أكياس شبكية 25 كغ',
-        departure: day.add(const Duration(days: 4)),
-        truckType: 'براد 40 قدم (Reefer)',
-        truckPlate: 'EG-73190',
-        driverName: 'سعيد عبد الله',
-        coolingSetpointC: 7,
-      ),
-    ];
-  }
+  /// The three marketplace offers (two export, one import), with real product photos.
+  static List<TradingOffer> offers() => const [
+        TradingOffer(
+          id: 'OF-201',
+          type: OfferType.export,
+          product: Products.tomato,
+          variety: 'بندورة بلدية',
+          imageAsset: 'assets/images/offer_tomato.png',
+          quantityTons: 24,
+          pricePerTonJod: 520,
+          origin: 'الأغوار الشمالية',
+          destination: 'دبي',
+          partner: 'شركة وادي الأردن للتصدير الزراعي',
+          description: 'بندورة مقطوفة حديثًا ومفروزة في صناديق 10 كغ، جاهزة للنقل المبرّد عند 12°C.',
+        ),
+        TradingOffer(
+          id: 'OF-202',
+          type: OfferType.export,
+          product: Products.cucumber,
+          variety: 'خيار بلدي',
+          imageAsset: 'assets/images/offer_cucumber.png',
+          quantityTons: 18,
+          pricePerTonJod: 310,
+          origin: 'الأغوار الوسطى',
+          destination: 'الرياض',
+          partner: 'شركة وادي الأردن للتصدير الزراعي',
+          description: 'خيار متوسط الحجم مغلّف بأكياس حفظ الرطوبة داخل صناديق مهوّاة.',
+        ),
+        TradingOffer(
+          id: 'OF-203',
+          type: OfferType.import,
+          product: Products.potato,
+          variety: 'بطاطا سبونتا',
+          imageAsset: 'assets/images/offer_potato.png',
+          quantityTons: 40,
+          pricePerTonJod: 240,
+          origin: 'مصر — الإسكندرية',
+          destination: 'عمّان',
+          partner: 'مؤسسة الدلتا للتصدير',
+          description: 'بطاطا للاستيراد بأحجام متجانسة، مناسبة للتخزين الطويل عند 7°C.',
+        ),
+      ];
 
   static SensorReading _reading(double t, double h, double sp, {int minutesAgo = 5}) => SensorReading(
         time: DateTime.now().subtract(Duration(minutes: minutesAgo)),
