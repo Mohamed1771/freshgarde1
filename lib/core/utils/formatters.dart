@@ -47,11 +47,6 @@ abstract final class Validators {
     return RegExp(r'^(\+9627|009627|07)[789]\d{7}$').hasMatch(s) ? null : 'أدخل رقم هاتف أردني صحيح (07XXXXXXXX)';
   }
 
-  /// Generic international phone for foreign importers.
-  static String? phone(String? v) {
-    if (v == null || v.trim().isEmpty) return 'رقم الهاتف مطلوب';
-    return RegExp(r'^\+?\d{8,15}$').hasMatch(v.replaceAll(RegExp(r'[\s-]'), '')) ? null : 'رقم هاتف غير صحيح';
-  }
 
   static String? emailOrPhone(String? v) {
     if (v == null || v.trim().isEmpty) return 'أدخل البريد الإلكتروني أو رقم الهاتف';

@@ -43,7 +43,7 @@ class _CreateShipmentScreenState extends State<CreateShipmentScreen> {
   final _impCompany = TextEditingController();
   final _impPhone = TextEditingController();
   final _impAddress = TextEditingController();
-  String? _impCountry;
+  String? _impGovernorate;
   // Product
   Product? _product;
   final _variety = TextEditingController();
@@ -123,7 +123,7 @@ class _CreateShipmentScreenState extends State<CreateShipmentScreen> {
       exporterCompany: _expCompany.text.trim(),
       importerName: _impName.text.trim(),
       importerCompany: _impCompany.text.trim(),
-      importerCountry: _impCountry!,
+      importerGovernorate: _impGovernorate!,
       product: p,
       variety: _variety.text.trim(),
       quantityTons: double.parse(_qty.text),
@@ -231,13 +231,13 @@ class _CreateShipmentScreenState extends State<CreateShipmentScreen> {
           _text(_impCompany, 'اسم الشركة المستوردة', Icons.business_outlined),
           _text(_impName, 'اسم المسؤول لدى المستورد', Icons.person_outline),
           AppDropdown<String>(
-            label: 'دولة المستورد',
-            icon: Icons.public,
-            items: MockData.countries,
-            value: _impCountry,
-            onChanged: (v) => setState(() => _impCountry = v),
+            label: 'محافظة المستورد',
+            icon: Icons.location_city_outlined,
+            items: MockData.governorates,
+            value: _impGovernorate,
+            onChanged: (v) => setState(() => _impGovernorate = v),
           ),
-          _text(_impPhone, 'هاتف المستورد (دولي)', Icons.phone_outlined, validator: Validators.phone, keyboard: TextInputType.phone, hint: '+9715XXXXXXXX'),
+          _text(_impPhone, 'هاتف المستورد', Icons.phone_outlined, validator: Validators.jordanPhone, keyboard: TextInputType.phone, hint: '07XXXXXXXX'),
           _text(_impAddress, 'عنوان التسليم', Icons.location_on_outlined),
         ]),
       );
@@ -435,7 +435,7 @@ class _CreateShipmentScreenState extends State<CreateShipmentScreen> {
       section('المصدّر', [InfoRow(label: 'المنشأة', value: _expCompany.text), InfoRow(label: 'المسؤول', value: _expName.text)], 0),
       section('المستورد', [
         InfoRow(label: 'الشركة', value: _impCompany.text),
-        InfoRow(label: 'الدولة', value: _impCountry ?? '-'),
+        InfoRow(label: 'المحافظة', value: _impGovernorate ?? '-'),
         InfoRow(label: 'العنوان', value: _impAddress.text),
       ], 1),
       section('المنتج', [

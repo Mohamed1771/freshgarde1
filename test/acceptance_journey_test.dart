@@ -87,10 +87,10 @@ void main() {
     expect(find.text('إنشاء شحنة تصدير'), findsOneWidget);
     await tapText(t, 'التالي'); // Step 1 is prefilled from the profile.
 
-    await enter(t, 'اسم الشركة المستوردة', 'الدوحة للخضار');
+    await enter(t, 'اسم الشركة المستوردة', 'أسواق إربد المركزية');
     await enter(t, 'اسم المسؤول لدى المستورد', 'ناصر');
-    await pick(t, 'دولة المستورد', 'قطر');
-    await enter(t, 'هاتف المستورد (دولي)', '+97455512345');
+    await pick(t, 'محافظة المستورد', 'إربد');
+    await enter(t, 'هاتف المستورد', '0795551234');
     await enter(t, 'عنوان التسليم', 'السوق المركزي');
     await tapText(t, 'التالي');
 
@@ -106,7 +106,7 @@ void main() {
     await enter(t, 'اسم السائق', 'سامر');
     await enter(t, 'هاتف السائق', '0791112233');
     await pick(t, 'نقطة الانطلاق', 'عمّان');
-    await pick(t, 'الوجهة', 'الدوحة');
+    await pick(t, 'الوجهة', 'إربد');
     await pickDate(t, 'تاريخ الانطلاق');
     // The arrival picker opens on the first allowed day (departure + 1).
     await pickDate(t, 'تاريخ الوصول المتوقع');
