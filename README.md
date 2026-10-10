@@ -64,8 +64,8 @@ FreshGarde تطبيق للتجّار الأردنيين لتصدير واستي�
 Requirements: **Flutter 3.47+ (Dart 3.13+)**, Chrome for web, Android Studio / an emulator or a device for Android.
 
 ```bash
-git clone https://github.com/<user>/freshgarde.git
-cd freshgarde
+git clone https://github.com/Mohamed1771/freshgarde1.git
+cd freshgarde1
 flutter pub get
 
 # Web (Chrome). Release mode is the most reliable way to run locally.
