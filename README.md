@@ -23,11 +23,11 @@ flutter analyze && flutter test
 
 | | |
 |---|---|
-| Email | `demo@freshroute.jo` (or phone `0791234567`) |
-| Password | `Demo1234` |
+| Email | `ahmad@gmail.com` (or phone `0791234567`) |
+| Password | `12345678` |
 | OTP (forgot password) | `123456` |
 
-The login screen has a "تعبئة البيانات التجريبية" button. A newly registered trader lands on
+The login screen no longer shows these details. A newly registered trader lands on
 "verification pending"; the button there simulates the admin approval.
 
 ## App scope (MVP)
@@ -53,7 +53,7 @@ readings, charts, produce, forecast, decisions and alerts update as the scenario
 Opening any shipment shows its live view: the 3D truck on top and live panels below. There are no simulation
 controls. `LiveSimulationService` keeps one session per shipment for the app session:
 
-* **active** shipments run continuously (speed in Settings, default 0.5 simulated h/s → a 48 h trip in ~96 s),
+* **active** shipments run continuously (speed in Settings, default 0.5 simulated h/s → a 48 h trip in ~96 s; at least one minute between alert notifications),
   starting from their current progress, and are marked **delivered** on arrival;
 * **pending** shipments wait at hour 0 until "انطلاق الشاحنة";
 * **delivered / archived** shipments show the completed trip.

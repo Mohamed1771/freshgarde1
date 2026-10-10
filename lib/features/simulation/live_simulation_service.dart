@@ -52,8 +52,8 @@ class LiveSession {
   /// Minimum simulated time between two alerts of the same shipment.
   static const minGapHours = 2.0;
 
-  /// Minimum real time between two alerts (so SnackBars do not stack up at high speed).
-  static const minGapReal = Duration(seconds: 6);
+  /// Minimum real time between two alert notifications.
+  static const minGapReal = Duration(minutes: 1);
 
   /// The same kind of alert is not repeated within this simulated window (avoids flapping
   /// around a threshold, e.g. humidity hovering at 82%).

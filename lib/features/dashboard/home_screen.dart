@@ -22,7 +22,6 @@ class HomeScreen extends StatelessWidget {
     final offers = context.watch<OfferRepository>().all;
     final shell = context.read<ShellController>();
     final active = shipments.byStatus(ShipmentStatus.active);
-    final alerts = active.where((s) => s.hasUnresolvedCritical).length;
 
     return ListView(
       padding: const EdgeInsets.fromLTRB(16, 16, 16, 32),
@@ -65,19 +64,6 @@ class HomeScreen extends StatelessWidget {
                 ),
               ]),
             ),
-            if (alerts > 0) ...[
-              const SizedBox(height: 14),
-              AppCard(
-                color: AppColors.danger.withValues(alpha: 0.06),
-                onTap: () => shell.openShipments(ShipmentStatus.active),
-                child: Row(children: [
-                  const Icon(Icons.warning_amber_rounded, color: AppColors.danger),
-                  const SizedBox(width: 10),
-                  Expanded(child: Text('$alerts شحنة نشطة لديها تنبيه حرارة حرج', style: t.titleSmall)),
-                  const Icon(Icons.chevron_left),
-                ]),
-              ),
-            ],
             const SizedBox(height: 8),
             SectionHeader('العروض المتاحة', action: 'السوق', onAction: () => shell.openMarketplace()),
             OfferList(offers: offers),

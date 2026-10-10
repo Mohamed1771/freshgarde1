@@ -28,8 +28,8 @@ class _SplashScreenState extends State<SplashScreen> {
 
   @override
   Widget build(BuildContext context) => Scaffold(
-        body: DecoratedBox(
-          decoration: const BoxDecoration(gradient: AppColors.brandGradient),
+        backgroundColor: AppColors.background,
+        body: SizedBox.expand(
           child: Center(
             child: TweenAnimationBuilder<double>(
               tween: Tween(begin: 0.85, end: 1),
@@ -37,11 +37,11 @@ class _SplashScreenState extends State<SplashScreen> {
               curve: Curves.easeOutBack,
               builder: (_, s, child) => Transform.scale(scale: s, child: child),
               child: const Column(mainAxisSize: MainAxisSize.min, children: [
-                BrandLogo(size: 104, light: true),
+                BrandLogo(size: 120),
                 SizedBox(height: 22),
-                BrandTitle(light: true),
+                BrandTitle(),
                 SizedBox(height: 32),
-                SizedBox(width: 28, height: 28, child: CircularProgressIndicator(strokeWidth: 2.5, color: AppColors.white)),
+                SizedBox(width: 28, height: 28, child: CircularProgressIndicator(strokeWidth: 2.5, color: AppColors.primary)),
               ]),
             ),
           ),

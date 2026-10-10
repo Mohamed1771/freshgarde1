@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:freshroute_platform/app/app.dart';
+import 'package:freshroute_platform/shared/repositories/mock_data.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 void main() {
@@ -19,7 +20,8 @@ void main() {
     await tester.pump();
     expect(find.text('أدخل البريد الإلكتروني أو رقم الهاتف'), findsOneWidget);
 
-    await tester.tap(find.text('تعبئة البيانات التجريبية'));
+    await tester.enterText(find.byType(TextFormField).at(0), MockData.demoEmail);
+    await tester.enterText(find.byType(TextFormField).at(1), MockData.demoPassword);
     await tester.pump();
     await tester.tap(find.text('دخول'));
     await tester.pump(const Duration(seconds: 1));

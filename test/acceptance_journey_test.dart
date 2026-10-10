@@ -3,6 +3,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:freshroute_platform/app/app.dart';
 import 'package:freshroute_platform/shared/models/shipment.dart';
 import 'package:freshroute_platform/shared/repositories/shipment_repository.dart';
+import 'package:freshroute_platform/shared/repositories/mock_data.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 
@@ -67,7 +68,8 @@ void main() {
     await settle(t, 1700);
 
     // Login with the documented demo account.
-    await tapText(t, 'تعبئة البيانات التجريبية');
+    await t.enterText(find.byType(TextFormField).at(0), MockData.demoEmail);
+    await t.enterText(find.byType(TextFormField).at(1), MockData.demoPassword);
     await tapText(t, 'دخول');
     await settle(t);
     expect(find.text('العروض المتاحة'), findsOneWidget);

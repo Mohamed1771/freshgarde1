@@ -2,29 +2,16 @@ import 'package:flutter/material.dart';
 
 import '../theme/app_colors.dart';
 
-/// The FreshRoute logo (`assets/images/logo.webp`, white background).
-/// [light] puts it on a white rounded tile for use over coloured surfaces.
+/// The FreshRoute logo (transparent PNG).
 class BrandLogo extends StatelessWidget {
-  const BrandLogo({super.key, this.size = 72, this.light = false});
+  const BrandLogo({super.key, this.size = 72});
   final double size;
-  final bool light;
 
-  static const asset = 'assets/images/logo.webp';
+  static const asset = 'assets/images/logo.png';
 
   @override
-  Widget build(BuildContext context) {
-    final image = Image.asset(asset, width: size, height: size, fit: BoxFit.contain, filterQuality: FilterQuality.medium);
-    if (!light) return image;
-    return Container(
-      padding: EdgeInsets.all(size * 0.12),
-      decoration: BoxDecoration(
-        color: AppColors.white,
-        borderRadius: BorderRadius.circular(size * 0.28),
-        boxShadow: [BoxShadow(color: AppColors.navy.withValues(alpha: 0.18), blurRadius: 24, offset: const Offset(0, 8))],
-      ),
-      child: image,
-    );
-  }
+  Widget build(BuildContext context) =>
+      Image.asset(asset, width: size, height: size, fit: BoxFit.contain, filterQuality: FilterQuality.medium);
 }
 
 class BrandTitle extends StatelessWidget {

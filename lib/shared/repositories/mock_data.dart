@@ -10,9 +10,9 @@ import '../models/trading_offer.dart';
 /// Demo data. Every value here is fictional and for demonstration only.
 abstract final class MockData {
   /// Documented demo credentials (see README).
-  static const demoEmail = 'demo@freshroute.jo';
+  static const demoEmail = 'ahmad@gmail.com';
   static const demoPhone = '0791234567';
-  static const demoPassword = 'Demo1234';
+  static const demoPassword = '12345678';
   static const demoOtp = '123456';
 
   static const governorates = [

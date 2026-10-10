@@ -20,11 +20,4 @@ abstract final class AppColors {
   static const warning = Color(0xFFE09B1B);
   static const danger = Color(0xFFD64545);
   static const info = sky;
-
-  /// The logo's gradient, used for brand surfaces (splash).
-  static const brandGradient = LinearGradient(
-    begin: Alignment.topLeft,
-    end: Alignment.bottomRight,
-    colors: [Color(0xFF4CD06A), Color(0xFF13B3A0), Color(0xFF1EB6E3), Color(0xFF1270C0)],
-  );
 }

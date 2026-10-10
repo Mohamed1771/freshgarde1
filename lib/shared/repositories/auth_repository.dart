@@ -47,7 +47,7 @@ class AuthRepository extends ChangeNotifier {
     await Future<void>.delayed(_latency);
     final acc = _find(identifier);
     if (acc == null || acc.password != password) {
-      throw AuthException('بيانات الدخول غير صحيحة. جرّب الحساب التجريبي الموضّح أسفل الشاشة.');
+      throw AuthException('البريد الإلكتروني أو كلمة المرور غير صحيحة.');
     }
     _current = acc.trader;
     notifyListeners();

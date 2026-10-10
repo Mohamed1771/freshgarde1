@@ -8,7 +8,6 @@ import '../../core/utils/formatters.dart';
 import '../../core/widgets/common.dart';
 import '../../shared/models/trader.dart';
 import '../../shared/repositories/auth_repository.dart';
-import '../../shared/repositories/mock_data.dart';
 import 'widgets/auth_scaffold.dart';
 
 class LoginScreen extends StatefulWidget {
@@ -52,12 +51,6 @@ class _LoginScreenState extends State<LoginScreen> {
     }
   }
 
-  void _fillDemo() {
-    _id.text = MockData.demoEmail;
-    _pass.text = MockData.demoPassword;
-    setState(() => _error = null);
-  }
-
   @override
   Widget build(BuildContext context) {
     final t = Theme.of(context).textTheme;
@@ -91,22 +84,6 @@ class _LoginScreenState extends State<LoginScreen> {
             Text('ليس لديك حساب؟', style: t.bodyMedium),
             TextButton(onPressed: () => Navigator.pushNamed(context, Routes.register), child: const Text('سجّل كتاجر')),
           ]),
-          const SizedBox(height: 16),
-          AppCard(
-            color: AppColors.ice,
-            child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-              Row(children: [
-                const Icon(Icons.key_outlined, color: AppColors.primary),
-                const SizedBox(width: 8),
-                Text('الحساب التجريبي', style: t.titleSmall),
-              ]),
-              const SizedBox(height: 8),
-              SelectableText('البريد: ${MockData.demoEmail}\nأو الهاتف: ${MockData.demoPhone}\nكلمة المرور: ${MockData.demoPassword}',
-                  style: t.bodyMedium),
-              const SizedBox(height: 8),
-              OutlinedButton.icon(onPressed: _fillDemo, icon: const Icon(Icons.auto_fix_high), label: const Text('تعبئة البيانات التجريبية')),
-            ]),
-          ),
         ]),
       ),
     );
