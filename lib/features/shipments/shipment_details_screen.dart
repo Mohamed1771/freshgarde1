@@ -221,7 +221,7 @@ class _InfoCard extends StatelessWidget {
         InfoRow(icon: Icons.flight_takeoff, label: 'الانطلاق', value: Fmt.dateTime(s.departure)),
         InfoRow(icon: Icons.flag_outlined, label: 'الوصول المتوقع', value: Fmt.dateTime(s.eta)),
         InfoRow(icon: Icons.upload_rounded, label: 'المصدّر', value: '${s.exporterCompany}\n${s.exporterName}'),
-        InfoRow(icon: Icons.download_rounded, label: 'المستورد', value: '${s.importerCompany} (${s.importerGovernorate})\n${s.importerName}'),
+        InfoRow(icon: Icons.download_rounded, label: 'المستورد', value: '${s.importerCompany} (${s.importerCountry})\n${s.importerName}'),
         InfoRow(icon: Icons.local_shipping_outlined, label: 'الشاحنة', value: '${s.truckType} • ${s.truckPlate}'),
         InfoRow(icon: Icons.badge_outlined, label: 'السائق', value: s.driverName),
       ]),

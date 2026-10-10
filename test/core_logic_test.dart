@@ -119,7 +119,7 @@ void main() {
         exporterCompany: 'b',
         importerName: 'c',
         importerCompany: 'd',
-        importerGovernorate: 'إربد',
+        importerCountry: 'الأردن',
         product: base.product,
         variety: 'v',
         quantityTons: 3,

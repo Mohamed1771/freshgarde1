@@ -43,7 +43,7 @@ class _CreateShipmentScreenState extends State<CreateShipmentScreen> {
   final _impCompany = TextEditingController();
   final _impPhone = TextEditingController();
   final _impAddress = TextEditingController();
-  String? _impGovernorate;
+  String _impCountry = MockData.jordan;
   // Product
   Product? _product;
   final _variety = TextEditingController();
@@ -123,7 +123,7 @@ class _CreateShipmentScreenState extends State<CreateShipmentScreen> {
       exporterCompany: _expCompany.text.trim(),
       importerName: _impName.text.trim(),
       importerCompany: _impCompany.text.trim(),
-      importerGovernorate: _impGovernorate!,
+      importerCountry: _impCountry,
       product: p,
       variety: _variety.text.trim(),
       quantityTons: double.parse(_qty.text),
@@ -231,13 +231,20 @@ class _CreateShipmentScreenState extends State<CreateShipmentScreen> {
           _text(_impCompany, 'اسم الشركة المستوردة', Icons.business_outlined),
           _text(_impName, 'اسم المسؤول لدى المستورد', Icons.person_outline),
           AppDropdown<String>(
-            label: 'محافظة المستورد',
-            icon: Icons.location_city_outlined,
-            items: MockData.governorates,
-            value: _impGovernorate,
-            onChanged: (v) => setState(() => _impGovernorate = v),
+            label: 'دولة المستورد',
+            icon: Icons.public,
+            items: MockData.countryCities.keys.toList(),
+            value: _impCountry,
+            onChanged: (v) => setState(() {
+              if (v == null || v == _impCountry) return;
+              _impCountry = v;
+              _destination = null; // cities depend on the country
+            }),
           ),
-          _text(_impPhone, 'هاتف المستورد', Icons.phone_outlined, validator: Validators.jordanPhone, keyboard: TextInputType.phone, hint: '07XXXXXXXX'),
+          _text(_impPhone, 'هاتف المستورد', Icons.phone_outlined,
+              validator: _impCountry == MockData.jordan ? Validators.jordanPhone : Validators.phone,
+              keyboard: TextInputType.phone,
+              hint: _impCountry == MockData.jordan ? '07XXXXXXXX' : '+9715XXXXXXXX'),
           _text(_impAddress, 'عنوان التسليم', Icons.location_on_outlined),
         ]),
       );
@@ -329,8 +336,8 @@ class _CreateShipmentScreenState extends State<CreateShipmentScreen> {
           const SizedBox(width: 10),
           Expanded(
             child: AppDropdown<String>(
-              label: 'الوجهة',
-              items: MockData.destinations,
+              label: _impCountry == MockData.jordan ? 'الوجهة (المحافظة)' : 'الوجهة ($_impCountry)',
+              items: MockData.countryCities[_impCountry]!,
               value: _destination,
               onChanged: (v) => setState(() => _destination = v),
               validator: (v) => v == null ? 'اختر الوجهة' : (v == _origin ? 'الوجهة مطابقة للانطلاق' : null),
@@ -435,7 +442,7 @@ class _CreateShipmentScreenState extends State<CreateShipmentScreen> {
       section('المصدّر', [InfoRow(label: 'المنشأة', value: _expCompany.text), InfoRow(label: 'المسؤول', value: _expName.text)], 0),
       section('المستورد', [
         InfoRow(label: 'الشركة', value: _impCompany.text),
-        InfoRow(label: 'المحافظة', value: _impGovernorate ?? '-'),
+        InfoRow(label: 'الدولة', value: _impCountry),
         InfoRow(label: 'العنوان', value: _impAddress.text),
       ], 1),
       section('المنتج', [

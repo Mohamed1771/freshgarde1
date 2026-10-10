@@ -48,6 +48,12 @@ abstract final class Validators {
   }
 
 
+  /// International phone (with country code) for importers outside Jordan.
+  static String? phone(String? v) {
+    if (v == null || v.trim().isEmpty) return 'رقم الهاتف مطلوب';
+    return RegExp(r'^\+?\d{8,15}$').hasMatch(v.replaceAll(RegExp(r'[\s-]'), '')) ? null : 'رقم هاتف غير صحيح (مع مفتاح الدولة)';
+  }
+
   static String? emailOrPhone(String? v) {
     if (v == null || v.trim().isEmpty) return 'أدخل البريد الإلكتروني أو رقم الهاتف';
     return v.contains('@') ? email(v) : jordanPhone(v);

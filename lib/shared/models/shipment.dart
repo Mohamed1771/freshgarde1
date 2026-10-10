@@ -83,7 +83,7 @@ class Shipment {
     required this.exporterCompany,
     required this.importerName,
     required this.importerCompany,
-    required this.importerGovernorate,
+    required this.importerCountry,
     required this.product,
     required this.variety,
     required this.quantityTons,
@@ -117,7 +117,7 @@ class Shipment {
   final String exporterCompany;
   final String importerName;
   final String importerCompany;
-  final String importerGovernorate;
+  final String importerCountry;
   final Product product;
   final String variety;
   final double quantityTons;

@@ -87,10 +87,10 @@ void main() {
     expect(find.text('إنشاء شحنة تصدير'), findsOneWidget);
     await tapText(t, 'التالي'); // Step 1 is prefilled from the profile.
 
-    await enter(t, 'اسم الشركة المستوردة', 'أسواق إربد المركزية');
+    await enter(t, 'اسم الشركة المستوردة', 'مؤسسة الخليج للأغذية');
     await enter(t, 'اسم المسؤول لدى المستورد', 'ناصر');
-    await pick(t, 'محافظة المستورد', 'إربد');
-    await enter(t, 'هاتف المستورد', '0795551234');
+    await pick(t, 'دولة المستورد', 'الإمارات');
+    await enter(t, 'هاتف المستورد', '+971501234567');
     await enter(t, 'عنوان التسليم', 'السوق المركزي');
     await tapText(t, 'التالي');
 
@@ -106,7 +106,7 @@ void main() {
     await enter(t, 'اسم السائق', 'سامر');
     await enter(t, 'هاتف السائق', '0791112233');
     await pick(t, 'نقطة الانطلاق', 'عمّان');
-    await pick(t, 'الوجهة', 'إربد');
+    await pick(t, 'الوجهة (الإمارات)', 'دبي');
     await pickDate(t, 'تاريخ الانطلاق');
     // The arrival picker opens on the first allowed day (departure + 1).
     await pickDate(t, 'تاريخ الوصول المتوقع');
@@ -126,6 +126,8 @@ void main() {
     final repo = Provider.of<ShipmentRepository>(t.element(find.byType(Scaffold).first), listen: false);
     final created = repo.byStatus(ShipmentStatus.pending).first;
     expect(created.variety, 'بندورة شيري');
+    expect(created.importerCountry, 'الإمارات');
+    expect(created.destination, 'دبي');
     expect(find.text(created.id), findsOneWidget);
 
     // Shipment details (live simulation view, pending).

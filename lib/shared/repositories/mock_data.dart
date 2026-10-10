@@ -19,8 +19,21 @@ abstract final class MockData {
     'عمّان', 'إربد', 'الزرقاء', 'البلقاء', 'المفرق', 'جرش', 'عجلون', 'مادبا', 'الكرك', 'الطفيلة', 'معان', 'العقبة',
   ];
   static const originHubs = ['عمّان', 'الأغوار الشمالية', 'الأغوار الوسطى', 'إربد', 'المفرق', 'العقبة', 'الكرك'];
-  /// Delivery cities (Jordanian governorates).
-  static const destinations = governorates;
+  static const jordan = 'الأردن';
+
+  /// Destination countries and their delivery cities. Jordan (domestic) first, then export markets.
+  static const countryCities = <String, List<String>>{
+    jordan: governorates,
+    'السعودية': ['الرياض', 'جدة', 'الدمام', 'مكة المكرمة', 'المدينة المنورة'],
+    'الإمارات': ['دبي', 'أبوظبي', 'الشارقة'],
+    'قطر': ['الدوحة'],
+    'الكويت': ['مدينة الكويت'],
+    'البحرين': ['المنامة'],
+    'عُمان': ['مسقط', 'صلالة'],
+    'العراق': ['بغداد', 'البصرة', 'أربيل'],
+    'لبنان': ['بيروت'],
+    'مصر': ['القاهرة', 'الإسكندرية'],
+  };
   static const packagingTypes = ['صناديق بلاستيك 10 كغ', 'كراتين 5 كغ', 'صناديق خشب 15 كغ', 'أكياس شبكية 25 كغ'];
   static const truckTypes = ['براد 40 قدم (Reefer)', 'براد 20 قدم', 'شاحنة مبرّدة متوسطة 12 طن'];
 
@@ -132,7 +145,7 @@ abstract final class MockData {
         exporterCompany: 'شركة وادي الأردن للتصدير الزراعي',
         importerName: 'خالد العبادي',
         importerCompany: 'أسواق السلطان المركزية',
-        importerGovernorate: 'عمّان',
+        importerCountry: 'الأردن',
         product: Products.tomato,
         variety: 'بندورة شيري',
         quantityTons: 18,
@@ -165,7 +178,7 @@ abstract final class MockData {
         exporterCompany: 'شركة وادي الأردن للتصدير الزراعي',
         importerName: 'معاذ الحياري',
         importerCompany: 'مخازن الشمال للخضار',
-        importerGovernorate: 'إربد',
+        importerCountry: 'الأردن',
         product: Products.cucumber,
         variety: 'خيار بلدي',
         quantityTons: 12,
@@ -198,7 +211,7 @@ abstract final class MockData {
         exporterCompany: 'شركة وادي الأردن للتصدير الزراعي',
         importerName: 'ناصر الروسان',
         importerCompany: 'العقبة للتموين الفندقي',
-        importerGovernorate: 'العقبة',
+        importerCountry: 'الأردن',
         product: Products.pepper,
         variety: 'فلفل ملوّن',
         quantityTons: 6,
@@ -225,7 +238,7 @@ abstract final class MockData {
         exporterCompany: 'شركة وادي الأردن للتصدير الزراعي',
         importerName: 'فهد الدعجة',
         importerCompany: 'شركة الزرقاء للتموين',
-        importerGovernorate: 'الزرقاء',
+        importerCountry: 'الأردن',
         product: Products.dates,
         variety: 'تمر مجهول ملكي',
         quantityTons: 4,
@@ -253,7 +266,7 @@ abstract final class MockData {
         exporterCompany: 'شركة وادي الأردن للتصدير الزراعي',
         importerName: 'حسن المجالي',
         importerCompany: 'أسواق الكرك المركزية',
-        importerGovernorate: 'الكرك',
+        importerCountry: 'الأردن',
         product: Products.lemon,
         variety: 'ليمون أضاليا',
         quantityTons: 20,
